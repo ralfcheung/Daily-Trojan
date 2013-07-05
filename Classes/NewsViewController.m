@@ -300,7 +300,7 @@
             _captions.editable = NO;
             _captions.userInteractionEnabled = YES;
             [_captions setScrollEnabled:YES];
-            //            [_captions setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
+//            [_captions setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
             if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
 //                if([_captions respondsToSelector:@selector(setFont:)])
                 [_captions setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleCaption2]];
@@ -324,30 +324,10 @@
         [_managedObjectContext save:&error];
         if(error) NSLog(@"%@", [error description]);
         
-//        array = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-//        e = [array lastObject];
-        
-        
-//        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-//        bounce.frame = CGRectMake(titleText.contentSize.width - 100, titleText.contentSize.height - 40, 70, 32);
-        
-//        button.frame = CGRectMake(0, textView.contentSize.height - 40, textView.contentSize.width, 44);
-//        button.backgroundColor = [UIColor colorWithRed:147/255.0f green:21/255.0f blue:27/255.0f alpha:0];
-//        
-//        [button setTitle:@"Share on Facebook" forState:UIControlStateNormal];
-//        [button addTarget:self action:@selector(shareButton:) forControlEvents:UIControlEventTouchDown];
-//        [textView addSubview:button];
-//        UIButton *bounce = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//        bounce.frame = CGRectMake(titleText.contentSize.width - 100, titleText.contentSize.height - 40, 70, 32);
-//        [bounce setTitle:@"Bounce" forState:UIControlStateNormal];
-//        [bounce addTarget:self action:@selector(bounceScrollView) forControlEvents:UIControlEventTouchDown];
-
-//        [titleText addSubview:bounce];
-//        [_titleText insertSubview:bounce aboveSubview:_titleText.textInputView];
 
         visible = YES;
         
-        if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+//        if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
             [self TFHppleFinishLoading];
         
     });

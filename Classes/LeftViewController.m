@@ -307,12 +307,14 @@
                 
             }
             else {
+                RootViewController *rootViewController;
                 if(!indexPath.section){
-                    
-                }
+                    rootViewController = [[RootViewController alloc] initWithLink: nil name: @"Home" managedObjectContext: _managedObjectContext];
+
+                }else{
                 NSLog(@"Section: %@", [self.sections objectAtIndex:indexPath.row]);
-                RootViewController *rootViewController = [[RootViewController alloc] initWithLink: [self.links objectAtIndex: indexPath.row] name: [self.sections objectAtIndex:indexPath.row] managedObjectContext: _managedObjectContext];
-                rootViewController.managedObjectContext = [self managedObjectContext];
+                    rootViewController = [[RootViewController alloc] initWithLink: nil name: [self.sections objectAtIndex:indexPath.row] managedObjectContext: _managedObjectContext];
+                }
                 controller.centerController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
                 
                 if ([rootViewController respondsToSelector:@selector(tableView)]) {

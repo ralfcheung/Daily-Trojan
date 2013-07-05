@@ -112,8 +112,10 @@
 - (id)initWithLink:(NSString *)link name:(NSString*)name managedObjectContext: (NSManagedObjectContext *) managedObjectContext{
     self = [super init];
     if (self) {
-        self.feed = [link copy];
+        if(link)
+            self.feed = [link copy];
         self.title = name;
+        self.managedObjectContext = managedObjectContext;
         //        if ([ADBannerView instancesRespondToSelector:@selector(initWithAdType:)]) {
         //            _bannerView = [[ADBannerView alloc] initWithAdType:ADAdTypeBanner];
         //        } else {
