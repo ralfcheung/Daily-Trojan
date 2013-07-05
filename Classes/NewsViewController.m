@@ -763,13 +763,11 @@
 }
 
 -(void) backPage: (UISwipeGestureRecognizer*) swipe{
-    NSLog(@"back");
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
     
-    NSLog(@"%@\n", touch.view);
     if([touch.view isKindOfClass:[UIImageView class]]){
         NSLog(@"TEST\n");
     }
