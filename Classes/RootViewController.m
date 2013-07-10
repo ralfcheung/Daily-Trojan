@@ -181,7 +181,12 @@
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     [fetchRequest setEntity:[NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.articleTitle contains[c] %@", searchString];
+    NSPredicate *titlePredicate = [NSPredicate predicateWithFormat:@"SELF.articleTitle beginswith[c] %@ ", searchString];
+    NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", searchString];
+    NSPredicate *authorPredicate = [NSPredicate predicateWithFormat:@"SELF.author beginswith[c] %@", searchString];
+
+    NSArray *array = [NSArray arrayWithObjects:titlePredicate, categoryPredicate, authorPredicate, nil];
+    NSPredicate *predicate = [NSCompoundPredicate orPredicateWithSubpredicates:array];
     [fetchRequest setPredicate:predicate];
     searchedEntries = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
     
@@ -198,6 +203,10 @@
     [super viewDidLoad];
     
     self.allEntries = [NSMutableArray array];
+    _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];
+    _searchBar.delegate = self;
+    _searchBar.translucent = YES;
+
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         [[NSNotificationCenter defaultCenter] addObserver:self.tableView selector:@selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     }
@@ -208,14 +217,13 @@
     refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing"];
     //    self.refreshControl = refresh;
     
-    //    UIColor *bgRefreshColor = [UIColor colorWithRed:100/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
-    //
-    //    CGRect frame = self.tableView.bounds;
-    //    frame.origin.y = -frame.size.height;
-    //    UIView* bgView = [[UIView alloc] initWithFrame:frame];
-    //    bgView.backgroundColor = bgRefreshColor;
-    //
-    //    [self.tableView insertSubview:bgView atIndex:0];
+    UIColor *bgRefreshColor = [UIColor colorWithRed:100/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
+
+    CGRect frame = self.tableView.bounds;
+    frame.origin.y = -frame.size.height;
+    UIView* bgView = [[UIView alloc] initWithFrame:frame];
+    bgView.backgroundColor = bgRefreshColor;
+    [self.tableView insertSubview:bgView atIndex:0];
     
     
     
@@ -234,34 +242,36 @@
          [NSDictionary dictionaryWithObjectsAndKeys: [UIColor whiteColor], UITextAttributeTextColor, [UIFont fontWithName:@"HelveticaNeue-Light" size:16], UITextAttributeFont,nil]];
         //    [self.navigationController setNavigationBarHidden:YES];
         
-        [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
+//        [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
         
-        _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];
-        _searchBar.delegate = self;
-        _searchBar.translucent = YES;
         _searchBar.tintColor = [UIColor whiteColor];
         _searchBar.barTintColor = self.navigationController.navigationBar.barTintColor;
     }
-    else{
+    else{ //iOS 6
         _navBar = [[UINavigationBarWithoutGradient alloc] init];
         self.navigationItem.leftBarButtonItem = [UIBarButtonItem barItemWithImage:[UIImage imageNamed:@"menu.png"] target:self.viewDeckController action:@selector(toggleLeftView)];
         [self.navigationController setValue:_navBar forKey:@"navigationBar"];
         
         //    [self.navigationController setNavigationBarHidden:YES];
         
-        [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
-
+//        [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
+//        for (UIView *subview in _searchBar.subviews) {
+//            if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")]) {
+//                UIView *bg = [[UIView alloc] initWithFrame:subview.frame];
+//                bg.backgroundColor = [UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
+//                [_searchBar insertSubview:bg aboveSubview:subview];
+//                [subview removeFromSuperview];
+//                break;
+//            }
+//        }
+        UIView *view = [[UIView alloc] init];
+        view.backgroundColor = [UIColor blackColor];
+        UILabel *label = [[UILabel alloc] init];
+        label.text = @"Bottom";
+        label.textColor = [UIColor blackColor];
+        self.tableView.tableHeaderView = _searchBar;
+        self.tableView.tableFooterView = view;
     }
-    //    for (UIView *subview in _searchBar.subviews) {
-    //        if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")]) {
-    //            UIView *bg = [[UIView alloc] initWithFrame:subview.frame];
-    //            bg.backgroundColor = [UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
-    //            [_searchBar insertSubview:bg aboveSubview:subview];
-    //            [subview removeFromSuperview];
-    //            break;
-    //        }
-    //    }
-    //    self.tableView.tableHeaderView = _searchBar;
     
     for (UIView *view in _searchBar.subviews){
         if ([view isKindOfClass: [UITextField class]]) {
@@ -279,13 +289,13 @@
     _searchDisplay.searchResultsDataSource = self;
     _searchDisplay.searchResultsDelegate = self;
     
-    //    self.navigationController.navigationItem.titleView = segmentControl;
+//    self.navigationController.navigationItem.titleView = segmentControl;
     
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
-    //    NSFetchRequest *req = [[NSFetchRequest alloc] initWithEntityName:@"MyEntity"];
-    //    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"date >= %@", [NSDate date]];
+//    NSFetchRequest *req = [[NSFetchRequest alloc] initWithEntityName:@"MyEntity"];
+//    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"date >= %@", [NSDate date]];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"articleDate" ascending:NO];
     NSArray * descriptors = [NSArray arrayWithObject:sortDescriptor];
     fetchRequest.sortDescriptors = descriptors;
@@ -413,7 +423,7 @@
     
     if(indexPath.row == [_allEntries count] - 1){
         NSLog(@"getting new entries");
-        [self refresh:[NSString stringWithFormat:@"http://dailytrojan.com/feed/rss/?paged=%i", _allEntries.count / 50 + 2 ]];
+//        [self refresh:[NSString stringWithFormat:@"http://dailytrojan.com/feed/rss/?paged=%i", _allEntries.count / 50 + 2 ]];
         //bug: when it's in one of the sections page, it fails to go beyond 2, coz _all entries is almost always < 50
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];

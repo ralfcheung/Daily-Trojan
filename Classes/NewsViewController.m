@@ -189,6 +189,7 @@
     
     
     NSData *tutorialsHtmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:entry.articleURL]];
+    
     if(tutorialsHtmlData){
         NSString *str = [[NSString alloc] initWithData:tutorialsHtmlData encoding:NSUTF8StringEncoding];
         tutorialsHtmlData = [str dataUsingEncoding:NSUTF8StringEncoding];
@@ -228,18 +229,12 @@
         }
     }
     //change it to 'read'
-//    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-//    fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
-
-    else{
-    //if([content isEqual: @""]){  //offline reading mode
-        //        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"articleURL = %@", url];
-        //        NSArray *fetchResult = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-        //        Entry *e = [fetchResult lastObject];
+    else if(entry.story.content){
         content = entry.story.content;
         title = entry.articleTitle;
         author = [[NSMutableString alloc] initWithString:entry.author];
-//        if(entry.story.captions) captionString = entry.story.captions;
+    }else{
+        //pop a UIAlert
     }
     
     //For Facebook style description, uncheck Clip Subviews
@@ -250,7 +245,7 @@
         
         
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-            UIFontDescriptor *fontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle: UIFontTextStyleHeadline1];
+            UIFontDescriptor *fontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle: UIFontTextStyleHeadline];
             UIFontDescriptor *titleFontDescriptor = [fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
             
             UIFontDescriptor *helveticaNeueFamily = [UIFontDescriptor fontDescriptorWithFontAttributes: @{ UIFontDescriptorFamilyAttribute: @"Helvetica Neue"}];
@@ -259,7 +254,7 @@
 
             for (UIFontDescriptor *desc in matches) {
                 if([desc.postscriptName isEqualToString:@"HelveticaNeue-Light"]){
-                    titleFont = [UIFont fontWithDescriptor:desc size:28.0f];
+                    titleFont = [UIFont fontWithDescriptor:desc size:28.0];
 //                    desc 
                 }
             }
@@ -284,6 +279,8 @@
             [textStorage endEditing];
             
             NSLog(@"%f", textView.contentSize.height);
+            [textView sizeToFit];
+            [scrollView sizeToFit];
         }else{
 //        CGSize frameSize = [textView.text sizeWithFont:textView.textStorage.length];
 //        NSLog(@"%f", frameSize.height);
@@ -327,7 +324,7 @@
 
         visible = YES;
         
-//        if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+        if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
             [self TFHppleFinishLoading];
         
     });
@@ -412,10 +409,7 @@
     
     if(imageUrl){
         [self generateImage];
-    }else{
-
-    }
-    
+    }    
 //    NSData* data = [content dataUsingEncoding:NSUTF8StringEncoding];
 //    content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
@@ -571,16 +565,14 @@
 }
 
 -(void) initializeViews{
-    
+    scrollView = [[UIScrollView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    scrollView.delegate = self;
+    backgroundImage = [[UIImageView alloc] initWithFrame:scrollView.frame];
+    self.view.backgroundColor = [UIColor blackColor];
+
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         
-        scrollView = [[UIScrollView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        scrollView.scrollEnabled = YES;
-        
-        backgroundImage = [[UIImageView alloc] initWithFrame:scrollView.frame];
-        self.view.backgroundColor = [UIColor blackColor];
-
         CGRect newTextViewRect = CGRectInset(self.view.bounds, 8., 10.);
         
         textStorage = [[NSTextStorage alloc] init];
@@ -615,19 +607,12 @@
         
         
         
-        //    [scrollView addSubview:view];
-        [scrollView addSubview:textView];
-        [self.view addSubview:scrollView];
+//    [scrollView addSubview:view];
         
     }else{  //iOS 6
-        scrollView = [[UIScrollView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        //        scrollView.backgroundColor = [UIColor blackColor];
-        backgroundImage = [[UIImageView alloc] initWithFrame:scrollView.frame];
-        backgroundImage.backgroundColor = [UIColor blackColor];
-        
-        
+
         titleText = [[UITextView alloc] initWithFrame:CGRectMake(0, EMPTYVIEW, [[UIScreen mainScreen] bounds].size.width, 50)];
-        //    titleText.font = [UIFont preferredFontForTextStyle:UIFontDescriptorTextStyleHeadline2];
+//    titleText.font = [UIFont preferredFontForTextStyle:UIFontDescriptorTextStyleHeadline2];
         titleText.backgroundColor = [UIColor clearColor];
         titleText.textColor = [UIColor whiteColor];
         titleText.editable = NO;
@@ -643,13 +628,25 @@
         textView.textColor = [UIColor blackColor];
         
         [scrollView addSubview:titleText];
-        [scrollView addSubview:textView];
-        [self.view addSubview:scrollView];
         
     }
     
+    [scrollView addSubview:textView];
+
+    [self.view addSubview:scrollView];
+
     [self.view addSubview:backgroundImage];
     
+}
+
+-(void) scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    CGSize size = textView.frame.size;
+//    UIGraphicsBeginImageContextWithOptions(size, NULL, 0);
+//    [textView drawViewHierarchyInRect:textView.frame];
+//    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    newImage = [newImage applyLightEffect];
 }
 
 -(void) bounceScrollView{
