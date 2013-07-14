@@ -11,8 +11,11 @@
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Entry.h"
+#import <AVFoundation/AVFoundation.h>
 
-@interface NewsViewController : UIViewController  <UIGestureRecognizerDelegate, ADBannerViewDelegate, UIGestureRecognizerDelegate, MBProgressHUDDelegate, UIScrollViewDelegate, UITextFieldDelegate>
+@interface NewsViewController : UIViewController  <UIGestureRecognizerDelegate, ADBannerViewDelegate, UIGestureRecognizerDelegate, MBProgressHUDDelegate, UIScrollViewDelegate, UITextFieldDelegate, AVSpeechSynthesizerDelegate>
+
+
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 -(void) loadText;
 -(id) initWithLink:(NSString *)link;

@@ -43,7 +43,7 @@
 @property (nonatomic, retain) CIImage *result;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, strong) NSTextStorage *textStorage;
-
+@property (nonatomic, retain) AVSpeechSynthesizer *av;
 @end
 
 @implementation NewsViewController
@@ -63,6 +63,8 @@
 @synthesize result;
 @synthesize titleText;
 @synthesize textStorage;
+@synthesize av;
+
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner
 {
@@ -260,7 +262,7 @@
             }
 
             
-            //HelveticaNeue-Light, UIFontDescriptorNameAttribute
+//HelveticaNeue-Light, UIFontDescriptorNameAttribute
 //        NSLog(@"%@", matches);
             
             
@@ -306,16 +308,6 @@
             
         }
         
-        //        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-        //        fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
-        //        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"articleTitle = %@", title];
-        //
-        //        NSArray *array = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-        //        Entry *e = [array lastObject];
-        //        Story *s = [Story storyinManagedObjectContext:_managedObjectContext storyContent:content picture:nil caption:captionString];
-        //        e.story = s;
-        //        NSNumber *num = [NSNumber numberWithInt:1];
-        //        NSLog(@"%i", [num integerValue]);
         entry.read = [NSNumber numberWithInt:1];
         NSError *error;
         [_managedObjectContext save:&error];
@@ -407,10 +399,10 @@
     [self.view.layer insertSublayer:topGradient below:textView.layer];
     [self.view.layer insertSublayer:gradient below:textView.layer];
     
-    if(imageUrl){
-        [self generateImage];
-    }    
-//    NSData* data = [content dataUsingEncoding:NSUTF8StringEncoding];
+    
+    [self generateImage];
+    
+    //    NSData* data = [content dataUsingEncoding:NSUTF8StringEncoding];
 //    content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
 }
@@ -431,11 +423,16 @@
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("image downloader", NULL);
     dispatch_async(downloadQueue, ^{
-        NSData *data = [NSData dataWithContentsOfURL:link];
         [backgroundImage setContentMode:UIViewContentModeScaleToFill];
-        _image = [[UIImage alloc] initWithData:data];
+        NSLog(@"%@", imageUrl);
+        if(!imageUrl){
+            _image = [UIImage imageNamed:@"iPhone5.jpg"];
+            NSLog(@"going in");
+        }else{
+            NSData *data = [NSData dataWithContentsOfURL:link];
+            _image = [[UIImage alloc] initWithData:data];
         NSLog(@"Finished downloading image");
-        
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             backgroundImage.image = [_image applyBlurWithRadius:8 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
             backgroundImage.contentMode = UIViewContentModeScaleAspectFill;
@@ -544,7 +541,9 @@
     [self initializeViews];
     
     UIBarButtonItem *loadingView = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareButton:)];
-    [self.navigationItem setRightBarButtonItem:loadingView];
+    UIBarButtonItem *speech = [[UIBarButtonItem alloc] initWithTitle:@"Speech" style:UIBarButtonItemStylePlain target:self action:@selector(speak:)];
+    
+    [self.navigationItem setRightBarButtonItem:speech];
     
     [_captions setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.4f]];
     
@@ -557,12 +556,32 @@
                   withObject:nil
                     animated:YES];
     
-    
+    av = [[AVSpeechSynthesizer alloc]init];
+    av.delegate = self;
     
     [self.view addSubview:_captions];
     
     
 }
+
+
+-(void) speak:(id)sender{
+    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc]initWithString:textView.text];
+    utterance.rate = 0.25;
+    
+    if(av.speaking)
+        [av pauseSpeakingAtBoundary:AVSpeechBoundaryImmediate];
+    else if(av.paused){
+        NSLog(@"speaking");
+        [av speakUtterance:utterance];
+    }
+}
+
+-(void) speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didPauseSpeechUtterance:(AVSpeechUtterance *)utterance{
+    
+}
+
+
 
 -(void) initializeViews{
     scrollView = [[UIScrollView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -617,6 +636,11 @@
         titleText.textColor = [UIColor whiteColor];
         titleText.editable = NO;
         titleText.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:28];
+        titleText.layer.shadowColor = [[UIColor blackColor] CGColor];
+        titleText.layer.shadowOffset = CGSizeMake(1.0f, 1.0f);
+        titleText.layer.shadowOpacity = 1.0f;
+        titleText.layer.shadowOpacity = 1.0f;
+        titleText.layer.shadowRadius = 1.0f;
         
         textView = [[UITextView alloc] initWithFrame:CGRectMake(0, titleText.frame.origin.y + titleText.frame.size.height, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)];
         textView.editable = NO;
@@ -628,7 +652,7 @@
         textView.textColor = [UIColor blackColor];
         
         [scrollView addSubview:titleText];
-        
+        [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
     }
     
     [scrollView addSubview:textView];

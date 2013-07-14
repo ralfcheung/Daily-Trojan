@@ -22,6 +22,7 @@
         self.mainLabel.numberOfLines = 2;
         self.mainLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
         self.mainLabel.lineBreakMode = NSTextAlignmentJustified;
+        self.mainLabel.backgroundColor = [UIColor clearColor];
         category.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15];
 //        [self.mainLabel setFont:[UIFont boldSystemFontOfSize:24.0]];
 //        [self.mainLabel setTextAlignment:NSTextAlignmentCenter];

@@ -87,6 +87,8 @@
 		BFCB06651725D451002DD34A /* IIWrapController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCB06631725D356002DD34A /* IIWrapController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		BFCE0B221749F0D50078DFF9 /* RootSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCE0B211749F0D50078DFF9 /* RootSplitViewController.m */; };
 		BFD1CB7E17228DC00083E2CA /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BFD1CB7D17228DC00083E2CA /* libz.1.2.5.dylib */; };
+		BFD4B2C317908F41002E9D32 /* iPhone5@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFD4B2C117908F41002E9D32 /* iPhone5@2x.jpg */; };
+		BFD4B2C617908FA6002E9D32 /* iPhone4@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFD4B2C517908FA6002E9D32 /* iPhone4@2x.jpg */; };
 		BFD7569E1733A8470081DE4C /* NavBarIconLauncher@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD7569D1733A8470081DE4C /* NavBarIconLauncher@2x.png */; };
 		BFD87E7317336F6B0022B889 /* iconRetina.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD87E7217336F6B0022B889 /* iconRetina.png */; };
 		BFD87E7517336FA10022B889 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD87E7417336FA10022B889 /* icon.png */; };
@@ -186,7 +188,7 @@
 		BF661E501735F5380059DFCF /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		BF67026C174616E4001B687C /* iconiPad@x2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iconiPad@x2.png"; sourceTree = "<group>"; };
 		BF67026E174616FC001B687C /* iconiPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iconiPad.png; sourceTree = "<group>"; };
-		BF77505C177DE2DB004DA8CF /* Model 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Model 2.xcdatamodel"; sourceTree = "<group>"; };
+		BF77505C177DE2DB004DA8CF /* Model 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 2.xcdatamodel"; sourceTree = "<group>"; };
 		BF82A37D1724A9AD00E34FB1 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		BF8A178D1725B11500DAC8C7 /* IIViewDeckController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IIViewDeckController.h; sourceTree = "<group>"; };
 		BF8A178E1725B11500DAC8C7 /* IIViewDeckController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IIViewDeckController.m; sourceTree = "<group>"; };
@@ -232,6 +234,8 @@
 		BFCE0B211749F0D50078DFF9 /* RootSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootSplitViewController.m; sourceTree = "<group>"; };
 		BFCFAAA5175C8538004FBC34 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		BFD1CB7D17228DC00083E2CA /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
+		BFD4B2C117908F41002E9D32 /* iPhone5@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iPhone5@2x.jpg"; sourceTree = "<group>"; };
+		BFD4B2C517908FA6002E9D32 /* iPhone4@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iPhone4@2x.jpg"; sourceTree = "<group>"; };
 		BFD5503F1768D5D800843F1F /* Entry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Entry.h; sourceTree = "<group>"; };
 		BFD550401768D5D800843F1F /* Entry.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Entry.m; sourceTree = "<group>"; };
 		BFD7569D1733A8470081DE4C /* NavBarIconLauncher@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavBarIconLauncher@2x.png"; sourceTree = "<group>"; };
@@ -301,6 +305,8 @@
 				BFCFAAA5175C8538004FBC34 /* Default.png */,
 				BF67026E174616FC001B687C /* iconiPad.png */,
 				BF67026C174616E4001B687C /* iconiPad@x2.png */,
+				BFD4B2C117908F41002E9D32 /* iPhone5@2x.jpg */,
+				BFD4B2C517908FA6002E9D32 /* iPhone4@2x.jpg */,
 				BF598DB41744D6A60004C006 /* Daily Trojan.entitlements */,
 				BF3E6801175CD61100C466D6 /* AFNetworking */,
 				BFCB06641725D35C002DD34A /* IIWrap */,
@@ -608,12 +614,14 @@
 				28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */,
 				28F335F11007B36200424DE2 /* RootViewController.xib in Resources */,
 				35AFE33D12EE44FB00ECDFF2 /* WebViewController.xib in Resources */,
+				BFD4B2C317908F41002E9D32 /* iPhone5@2x.jpg in Resources */,
 				BF3D5C491722A1F5000970FC /* MainWindow-iPad.xib in Resources */,
 				BFB21AE4172374AB006EC547 /* NewsViewController.xib in Resources */,
 				BFD9E81F17253C4000D81A94 /* LifestyleViewController.xib in Resources */,
 				BFCB06601725CD8D002DD34A /* LeftViewController.xib in Resources */,
 				BFD87E7317336F6B0022B889 /* iconRetina.png in Resources */,
 				BFD87E7517336FA10022B889 /* icon.png in Resources */,
+				BFD4B2C617908FA6002E9D32 /* iPhone4@2x.jpg in Resources */,
 				BFD7569E1733A8470081DE4C /* NavBarIconLauncher@2x.png in Resources */,
 				BF9C6D051734D28900EF66B7 /* Lifestyle@2x.png in Resources */,
 				BF661E4B1735CC680059DFCF /* Sports@2x.png in Resources */,

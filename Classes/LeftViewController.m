@@ -37,8 +37,12 @@
     self.links = [NSArray arrayWithObjects: @"http://dailytrojan.com/category/news//feed/", @"http://dailytrojan.com/category/sports//feed/", @"http://dailytrojan.com/category/lifestyle//feed/", @"http://dailytrojan.com/category/opinion//feed/", nil];
     
     [self.tableView reloadData];
+//    UIColor *color = [[UITableViewHeaderFooterView appearance] tintColor];
+    
 //    [[self tableView] setBackgroundColor: [UIColor colorWithRed:120/255.0f green:21/255.0f blue:27/255.0f alpha:1.0f]];
-//    [[UITableViewHeaderFooterView appearance] setTintColor:[UIColor colorWithRed:255/255.0f green:211/255.0f blue:37/255.0f alpha:1.0f]];
+    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+        
+        [[UITableViewHeaderFooterView appearance] setTintColor:[UIColor colorWithRed:233/255.0f green:250/255.0f blue:247/255.0f alpha:1.0f]];
     //    [[UITableViewCell appearance] setTintColor: [UIColor blueColor]];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;

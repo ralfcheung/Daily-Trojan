@@ -195,35 +195,35 @@
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
-	NSLog(@"My token is: %@", deviceToken);
-    NSString *token = [NSString stringWithUTF8String:[deviceToken bytes]];
-    NSString *host = @"127.0.0.1:8888";
+//	NSLog(@"My token is: %@", deviceToken);
+//    NSString *token = [NSString stringWithUTF8String:[deviceToken bytes]];
+//    NSString *host = @"127.0.0.1:8888";
 //    NSString *URLString = @"/register.php?devicetoken=";
 //    NSLog(@"token: %@\n", token);
 //    URLString = [URLString stringByAppendingString:token];
 //    URLString = [URLString stringByAppendingString:@"&amp;amp;amp;amp;amp;devicetoken="];
 //    
-    NSString *dt = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"&lt;&gt;<>"]];
-    dt = [dt stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSLog(@"device token: %@\n", dt);
+//    NSString *dt = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"&lt;&gt;<>"]];
+//    dt = [dt stringByReplacingOccurrencesOfString:@" " withString:@""];
+//    NSLog(@"device token: %@\n", dt);
     
 //    URLString = [URLString stringByAppendingString:dt];
 //    URLString = [URLString stringByAppendingString:dt];
 //    URLString = [URLString stringByAppendingString:@"&amp;amp;amp;amp;amp;devicename="];
 //    URLString = [URLString stringByAppendingString:[[UIDevice alloc] name]];
     
-    NSString *URLString = @"http://localhost:8888";
-    NSDictionary *param = @{@"devicetoken":dt};
-    AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:URLString]];
-    [client postPath:@"/register.php"
-          parameters:param
-             success:^(AFHTTPRequestOperation *operation, id response) {
-                 NSLog(@"Success\n");
-             }
-             failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                 NSLog(@"Error with request");
-                 NSLog(@"%@",[error localizedDescription]);
-             }];
+//    NSString *URLString = @"http://localhost:8888";
+//    NSDictionary *param = @{@"devicetoken":dt};
+//    AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:URLString]];
+//    [client postPath:@"/register.php"
+//          parameters:param
+//             success:^(AFHTTPRequestOperation *operation, id response) {
+//                 NSLog(@"Success\n");
+//             }
+//             failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//                 NSLog(@"Error with request");
+//                 NSLog(@"%@",[error localizedDescription]);
+//             }];
     
 //    NSURL *url = [[NSURL alloc] initWithScheme:@"http" host:host path:URLString];
 //    NSURL *url = [[NSURL alloc] initWithScheme:@"http" host:@"google.com" path:@""];
