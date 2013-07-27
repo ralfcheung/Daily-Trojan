@@ -45,7 +45,6 @@
 //@property (nonatomic, assign) ADBannerView *bannerView;
 @property (nonatomic, retain) UISegmentedControl *segmentControl;
 
-
 @end
 
 
@@ -84,6 +83,9 @@
     NSError *error;
     NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
     
+    if(error){
+        NSLog(@"%@", error.localizedDescription);
+    }
     BOOL newData = NO;
     GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithData:returnData
                                                            options:0 error:&error];
@@ -291,19 +293,19 @@
     
 //    self.navigationController.navigationItem.titleView = segmentControl;
     
-    
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
-//    NSFetchRequest *req = [[NSFetchRequest alloc] initWithEntityName:@"MyEntity"];
-//    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"date >= %@", [NSDate date]];
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"articleDate" ascending:NO];
-    NSArray * descriptors = [NSArray arrayWithObject:sortDescriptor];
-    fetchRequest.sortDescriptors = descriptors;
-    if(![self.title isEqualToString:@"Home"]){
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category = %@", self.title];
-        fetchRequest.predicate = predicate;
-    }
     
+    if(![self.title isEqualToString:@"Home"]){
+        fetchRequest = [self sortCD];
+        
+    }else{
+        fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"articleDate" ascending:NO];
+        NSArray * descriptors = [NSArray arrayWithObject:sortDescriptor];
+        fetchRequest.sortDescriptors = descriptors;
+
+    }
+
     
     _allEntries = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
     //    NSLog(@"all entries: %i", [Entries count]);
@@ -320,6 +322,44 @@
 
 #pragma mark -
 #pragma mark Table view delegate
+
+-(NSFetchRequest*) sortCD{
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"articleDate" ascending:NO];
+    NSArray * descriptors = [NSArray arrayWithObject:sortDescriptor];
+    fetchRequest.sortDescriptors = descriptors;
+
+    NSPredicate *predicate;
+    
+    if([self.title isEqualToString:@"Sports"]){
+        
+        NSArray *array = [NSArray arrayWithObjects:
+                          [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Baseball"],[NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Basketball"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Football"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Golf"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Soccer"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Tennis"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Track and Field"],  [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Volleyball"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Water Polo"], [NSPredicate predicateWithFormat:@"category = %@", self.title], nil];
+        predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
+        
+    }else if([self.title isEqualToString:@"News"]){
+        NSArray *array = [NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Roundup"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", self.title], nil];
+        
+        predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
+        
+    }else if([self.title isEqualToString:@"LifeStyle"]){
+        NSArray *array = [NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Film"] ,[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Games"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Music"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Reviews"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Theatre"] ,[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", self.title],  nil];
+        
+        predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
+        
+    }else if([self.title isEqualToString:@"Opinion"]){
+        
+        predicate = [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", self.title];
+    }
+    
+    
+    fetchRequest.predicate = predicate;
+    return fetchRequest;
+
+}
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -430,9 +470,10 @@
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"articleDate" ascending:NO];
         NSArray * descriptors = [NSArray arrayWithObject:sortDescriptor];
         fetchRequest.sortDescriptors = descriptors;
+        
         if(![self.title isEqualToString:@"Home"]){
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category = %@", self.title];
-            fetchRequest.predicate = predicate;
+            fetchRequest = [self sortCD];
+            
         }
         
         
@@ -538,7 +579,6 @@
         cell.accessibilityLabel = cell.textLabel.text;
         cell.accessibilityValue = cell.textLabel.text;
         cell.textLabel.backgroundColor = [UIColor clearColor];
-        NSLog(@"%@", entry.read);
         if(entry.read == [NSNumber numberWithInt:0]){
             cell.backgroundColor = [UIColor blueColor];
         }

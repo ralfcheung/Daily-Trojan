@@ -34,7 +34,6 @@
 {
     [super viewDidLoad];
     self.sections = [NSArray arrayWithObjects:@"News", @"Sports",@"Lifestyle",@"Opinion",nil];
-    self.links = [NSArray arrayWithObjects: @"http://dailytrojan.com/category/news//feed/", @"http://dailytrojan.com/category/sports//feed/", @"http://dailytrojan.com/category/lifestyle//feed/", @"http://dailytrojan.com/category/opinion//feed/", nil];
     
     [self.tableView reloadData];
 //    UIColor *color = [[UITableViewHeaderFooterView appearance] tintColor];
@@ -70,6 +69,9 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0) {
+        return 130;
+    }
     return 60;
 }
 
@@ -124,28 +126,32 @@
                     
                     result = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
                     detail = [NSString stringWithFormat:@"%i unread news", [result count]];
-                    cell.detailTextLabel.text = detail;
+                    if([result count])
+                        cell.detailTextLabel.text = detail;
 
                     break;
                 case 1:
                     cell.imageView.image = [UIImage imageNamed:@"Sports.png"];
                     fetchRequest.predicate = [NSPredicate predicateWithFormat:@"read == %@ AND category == %@", [NSNumber numberWithInt:0], @"Sports"];
                     result = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%i unread news", [result count]];
+                    if([result count])
+                        cell.detailTextLabel.text = [NSString stringWithFormat:@"%i unread news", [result count]];
 
                     break;
                 case 2:
                     cell.imageView.image = [UIImage imageNamed:@"Lifestyle.png"];
                     fetchRequest.predicate = [NSPredicate predicateWithFormat:@"read == %@ AND category == %@", [NSNumber numberWithInt:0], @"Lifestyle"];
                     result = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%i unread news", [result count]];
+                    if([result count])
+                        cell.detailTextLabel.text = [NSString stringWithFormat:@"%i unread news", [result count]];
 
                     break;
                 case 3:
                     cell.imageView.image = [UIImage imageNamed:@"Opinion.png"];
                     fetchRequest.predicate = [NSPredicate predicateWithFormat:@"read == %@ AND category == %@", [NSNumber numberWithInt:0], @"Opinion"];
                     result = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%i unread news", [result count]];
+                    if([result count])
+                        cell.detailTextLabel.text = [NSString stringWithFormat:@"%i unread news", [result count]];
 
                     break;
                 default:
@@ -172,10 +178,15 @@
         cell.detailTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
     //    cell.selectionStyle = UITableViewCellSelectionStyleGray;
 //    cell.textLabel.textColor = [UIColor whiteColor];
-    
-    //    cell.imageView
-    //    UIView* bgview = [[UIView alloc] initWithFrame:cell.bounds];
-    //    bgview.backgroundColor = [UIColor greenColor];
+    if(indexPath.section == 1 && indexPath.row == 0){
+        CAGradientLayer *gradient = [CAGradientLayer layer];
+        gradient.opacity = 1;
+        [gradient setStartPoint:CGPointMake(0.0, 0.5)];
+        [gradient setEndPoint:CGPointMake(1.0, 0.5)];
+        gradient.frame = cell.frame;
+        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor clearColor] CGColor], (id)[[UIColor blackColor] CGColor], nil];
+        [cell.layer insertSublayer:gradient below:cell.layer];
+    }
     
     //    [[cell contentView] setBackgroundColor:color];
     
@@ -316,7 +327,7 @@
                     rootViewController = [[RootViewController alloc] initWithLink: nil name: @"Home" managedObjectContext: _managedObjectContext];
 
                 }else{
-                NSLog(@"Section: %@", [self.sections objectAtIndex:indexPath.row]);
+//                NSLog(@"Section: %@", [self.sections objectAtIndex:indexPath.row]);
                     rootViewController = [[RootViewController alloc] initWithLink: nil name: [self.sections objectAtIndex:indexPath.row] managedObjectContext: _managedObjectContext];
                 }
                 controller.centerController = [[UINavigationController alloc] initWithRootViewController:rootViewController];

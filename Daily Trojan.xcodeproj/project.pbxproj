@@ -81,6 +81,8 @@
 		BFB21AF91723C3F2006EC547 /* TFHppleElement.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB21AF51723C3DD006EC547 /* TFHppleElement.m */; };
 		BFB21AFA1723C3F2006EC547 /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB21AF71723C3DD006EC547 /* XPathQuery.m */; };
 		BFBA5C9E172B01BA00EF3842 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBA5C9D172B01BA00EF3842 /* iAd.framework */; };
+		BFC0DA6D17994D6900A0FD14 /* FirstPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC0DA6B1799485F00A0FD14 /* FirstPageViewController.m */; };
+		BFC0DA6E17994D7E00A0FD14 /* Entry.m in Sources */ = {isa = PBXBuildFile; fileRef = BFD550401768D5D800843F1F /* Entry.m */; };
 		BFCB065F1725CD8D002DD34A /* LeftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCB065D1725CD8D002DD34A /* LeftViewController.m */; };
 		BFCB06601725CD8D002DD34A /* LeftViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BFCB065E1725CD8D002DD34A /* LeftViewController.xib */; };
 		BFCB06611725D30B002DD34A /* IIViewDeckController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8A178E1725B11500DAC8C7 /* IIViewDeckController.m */; };
@@ -225,6 +227,9 @@
 		BFB21AF61723C3DD006EC547 /* XPathQuery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XPathQuery.h; sourceTree = "<group>"; };
 		BFB21AF71723C3DD006EC547 /* XPathQuery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
 		BFBA5C9D172B01BA00EF3842 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		BFC0DA6A1799485F00A0FD14 /* FirstPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstPageViewController.h; sourceTree = "<group>"; };
+		BFC0DA6B1799485F00A0FD14 /* FirstPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstPageViewController.m; sourceTree = "<group>"; };
+		BFC0DA6C1799485F00A0FD14 /* FirstPageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FirstPageViewController.xib; sourceTree = "<group>"; };
 		BFCB065C1725CD8D002DD34A /* LeftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeftViewController.h; sourceTree = "<group>"; };
 		BFCB065D1725CD8D002DD34A /* LeftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftViewController.m; sourceTree = "<group>"; };
 		BFCB065E1725CD8D002DD34A /* LeftViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeftViewController.xib; sourceTree = "<group>"; };
@@ -494,6 +499,9 @@
 				BF35A8F0177CCD8F00DD0803 /* Cell.m */,
 				28C286DF0D94DF7D0034E888 /* RootViewController.h */,
 				28C286E00D94DF7D0034E888 /* RootViewController.m */,
+				BFC0DA6A1799485F00A0FD14 /* FirstPageViewController.h */,
+				BFC0DA6B1799485F00A0FD14 /* FirstPageViewController.m */,
+				BFC0DA6C1799485F00A0FD14 /* FirstPageViewController.xib */,
 				BFFE03FF17786E33008E1969 /* BottomofTableView.h */,
 				BFCB065C1725CD8D002DD34A /* LeftViewController.h */,
 				BFCB065D1725CD8D002DD34A /* LeftViewController.m */,
@@ -647,6 +655,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFC0DA6E17994D7E00A0FD14 /* Entry.m in Sources */,
+				BFC0DA6D17994D6900A0FD14 /* FirstPageViewController.m in Sources */,
 				BF35A8F2177CD03D00DD0803 /* Cell.m in Sources */,
 				BF9EE7E11774C01900F55BE3 /* UIImage+ImageEffects.m in Sources */,
 				BF8F5BC51758A7820046EA50 /* MBProgressHUD.m in Sources */,

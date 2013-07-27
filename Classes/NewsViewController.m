@@ -631,14 +631,12 @@
     }else{  //iOS 6
 
         titleText = [[UITextView alloc] initWithFrame:CGRectMake(0, EMPTYVIEW, [[UIScreen mainScreen] bounds].size.width, 50)];
-//    titleText.font = [UIFont preferredFontForTextStyle:UIFontDescriptorTextStyleHeadline2];
         titleText.backgroundColor = [UIColor clearColor];
         titleText.textColor = [UIColor whiteColor];
         titleText.editable = NO;
         titleText.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:28];
         titleText.layer.shadowColor = [[UIColor blackColor] CGColor];
         titleText.layer.shadowOffset = CGSizeMake(1.0f, 1.0f);
-        titleText.layer.shadowOpacity = 1.0f;
         titleText.layer.shadowOpacity = 1.0f;
         titleText.layer.shadowRadius = 1.0f;
         

@@ -16,7 +16,7 @@
 #import "GDataXMLNode.h"
 #import "GDataXMLElement-Extras.h"
 #import "NSDate+InternetDateTime.h"
-
+#import "FirstPageViewController.h"
 
 @implementation RSSFunAppDelegate
 
@@ -56,6 +56,8 @@
 //    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
     
     rootViewController = [[RootViewController alloc] initWithLink: @"http://feeds2.feedburner.com/DailyTrojan-rss" name:@"Home" managedObjectContext:_managedObjectContext];
+//    FirstPageViewController *first = [[FirstPageViewController alloc] initWithTitles];
+
     rootViewController.managedObjectContext = [self managedObjectContext];
     leftVC = [[LeftViewController alloc] init];
     leftVC.managedObjectContext = [self managedObjectContext];
