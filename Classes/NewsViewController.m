@@ -154,7 +154,6 @@
             NSArray *names = [authorSt componentsSeparatedByString: @" "];
             [author appendString:@"By: "];
             for (__strong NSString *name in names){
-                NSLog(@"%@", name);
                 name = [name stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[name substringToIndex:1] capitalizedString]];
                 [author appendFormat:@"%@ ", name];
             }
@@ -287,6 +286,7 @@
 //        NSLog(@"%f", frameSize.height);
             textView.text = [NSString stringWithFormat:@"%@%@", author, entry.story.content];
             titleText.text = entry.articleTitle;
+
         }
 
         
@@ -325,6 +325,7 @@
 
 -(void) TFHppleFinishLoading{
     
+    
     CGFloat titleHeight = titleText.contentSize.height;
     CGFloat textHeight = textView.contentSize.height;
     
@@ -333,35 +334,23 @@
     titleText.frame = titleFrame;
     
     
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-        if ([UIScreen mainScreen].scale == 2.0f) {
-            CGSize sizeResult = [[UIScreen mainScreen] bounds].size;
-            CGFloat scale = [UIScreen mainScreen].scale;
-            sizeResult = CGSizeMake(sizeResult.width * scale, sizeResult.height * scale);
-            
-            if(sizeResult.height == 960){
-                titleText.frame = CGRectMake(0, 680 - EMPTYVIEW -titleText.contentSize.height - 20, titleText.frame.size.width, titleText.frame.size.height);
-                textView.frame = CGRectMake(0, titleText.frame.origin.y + titleHeight, textView.frame.size.width, textHeight);
-                
-                
-            }
-            if(sizeResult.height == 1136){
-                titleText.frame = CGRectMake(0, 770 - EMPTYVIEW -titleText.contentSize.height - 20, titleText.frame.size.width, titleText.frame.size.height);
-                textView.frame = CGRectMake(0, titleText.frame.origin.y + titleHeight, textView.frame.size.width, textHeight);
-                
-            }
-        } else {
-            //            NSLog(@"iPhone Standard Resolution");
-        }
-    }
+    CGRect frame = textView.frame;
+    frame.size = textView.contentSize;
+    textView.frame = frame;
+    UIView *view = [[UIView alloc] initWithFrame:textView.frame];
+    UIView *titleView = [UIView new];
+    titleView.frame = titleText.frame;
     
+    [self.view addSubview:view];
+    [self.view addSubview:titleView];
+    NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(scrollView, textView, titleText, titleView, view);
     
-    
-    CGSize size = scrollView.contentSize;
-    size.height = textHeight + titleHeight + EMPTYVIEW + 80;
-    scrollView.contentSize = size;
-    
-//    NSLog(@"%f", scrollView.contentSize.height);
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[textView(==scrollView)]|" options:0 metrics: 0 views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[titleText(==scrollView)]|" options:0 metrics:0 views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-280-[titleText(==titleView)]-[textView(==view)]|" options:0 metrics: 0 views:viewsDictionary]];
+
 }
 
 - (void)loadDetails {
@@ -587,7 +576,7 @@
     scrollView.delegate = self;
     backgroundImage = [[UIImageView alloc] initWithFrame:scrollView.frame];
     self.view.backgroundColor = [UIColor blackColor];
-    [scrollView addSubview:backgroundImage];
+    [self.view addSubview:backgroundImage];
 
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
@@ -611,8 +600,6 @@
         textView.scrollEnabled = NO;
         textView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
         textView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4f];
-        //    textView.allowsEditingTextAttributes = NO;
-        
         
         CGSize size = scrollView.contentSize;
         size.height = textView.contentSize.height + EMPTYVIEW;
@@ -629,11 +616,10 @@
 
         
         
-//    [scrollView addSubview:view];
         
     }else{  //iOS 6
 
-        titleText = [[UITextView alloc] initWithFrame:CGRectMake(0, EMPTYVIEW, [[UIScreen mainScreen] bounds].size.width, 50)];
+        titleText = [[UITextView alloc] init];
         titleText.backgroundColor = [UIColor clearColor];
         titleText.textColor = [UIColor whiteColor];
         titleText.editable = NO;
@@ -642,31 +628,34 @@
         titleText.layer.shadowOffset = CGSizeMake(1.0f, 1.0f);
         titleText.layer.shadowOpacity = 1.0f;
         titleText.layer.shadowRadius = 1.0f;
-        
-//        textView = [[UITextView alloc] initWithFrame:CGRectMake(0, titleText.frame.origin.y + titleText.frame.size.height, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)];
-        textView = [UITextView new];
+        [titleText setTranslatesAutoresizingMaskIntoConstraints:NO];
+        textView = [[UITextView alloc] init];
         [textView setTranslatesAutoresizingMaskIntoConstraints:NO];
         textView.editable = NO;
         textView.scrollEnabled = NO;
         textView.backgroundColor = [UIColor blackColor];
         textView.alpha = 0.8;
         textView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
-        
         textView.textColor = [UIColor blackColor];
         
-//        [self.view addSubview:titleText];
         [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
-        [scrollView addSubview:textView];
-        [scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [backgroundImage setTranslatesAutoresizingMaskIntoConstraints:NO];
-        NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(scrollView, backgroundImage);
-//        [self.view addSubview:textView];
         [self.view addSubview:scrollView];
-        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
-        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
-        [scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[backgroundImage]|" options:0 metrics: 0 views:viewsDictionary]];
-        [scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImage]|" options:0 metrics: 0 views:viewsDictionary]];
-    
+        [scrollView addSubview:textView];
+        [scrollView addSubview:titleText];
+        
+        [scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:textView
+                                                              attribute:NSLayoutAttributeWidth
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:self.view
+                                                              attribute:NSLayoutAttributeWidth
+                                                             multiplier:1.0f constant:0]];
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:titleText
+                                                             attribute:NSLayoutAttributeWidth
+                                                             relatedBy:NSLayoutRelationEqual
+                                                                toItem:self.view
+                                                             attribute:NSLayoutAttributeWidth
+                                                            multiplier:1.0f constant:0]];
     }
     
 
@@ -759,7 +748,7 @@
 -(void) tapMethod: (UITapGestureRecognizer*) gesture{
     
     if(visible && backgroundImage.image){
-        NSLog(@"disappearing\n");
+//        NSLog(@"disappearing\n");
         
         [UIView animateWithDuration:0.1
                               delay:0
@@ -775,7 +764,7 @@
                                 }
                             }];
     }else{
-        NSLog(@"appearing\n");
+//        NSLog(@"appearing\n");
         [UIView animateWithDuration:0.1
                               delay:0
                             options:UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -800,7 +789,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
     
     if([touch.view isKindOfClass:[UIImageView class]]){
-        NSLog(@"TEST\n");
+//        NSLog(@"TEST\n");
     }
     
     return NO;

@@ -110,8 +110,6 @@
             CAGradientLayer *gradient = [CAGradientLayer layer];
             gradient.opacity = 1;
             gradient.frame = cell.bounds;
-            NSLog(@"%f %f", cell.frame.size.height, cell.frame.size.width);
-            NSLog(@"%f %f", gradient.frame.size.height, gradient.frame.size.width);
 
 //            gradient.startPoint = CGPointMake(0, 0.5);
 //            gradient.endPoint = CGPointMake(1.0, 0.5);
