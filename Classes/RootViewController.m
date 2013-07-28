@@ -590,7 +590,14 @@
 //        cell.detailTextLabel.backgroundColor = [UIColor clearColor];
 //        cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
         [cell addGestureRecognizer:sgr];
-        
+        if([entry.category isEqualToString:@"News"]){
+            cell.imageView.image = [UIImage imageNamed:@"NewsIcon.jpg"];
+        }else if([entry.category isEqualToString:@"Sports"] || [entry.category isEqualToString:@"Football"] || [entry.category isEqualToString:@"Golf"] || [entry.category isEqualToString:@"Water Polo"] || [entry.category isEqualToString:@"Baseball"] || [entry.category isEqualToString:@"Basketball"])
+            cell.imageView.image = [UIImage imageNamed:@"SportsIcon.jpg"];
+        else if([entry.category isEqualToString:@"Lifestyle"])
+            cell.imageView.image = [UIImage imageNamed:@"LifestyleIcon.jpg"];
+        else if([entry.category isEqualToString:@"Opinion"])
+            cell.imageView.image = [UIImage imageNamed:@"OpinionIcon.jpg"];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
     }
     

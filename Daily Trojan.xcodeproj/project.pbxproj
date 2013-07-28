@@ -74,6 +74,9 @@
 		BFA306C3174EE1A00055A89A /* UISearchBarSolidColor.m in Sources */ = {isa = PBXBuildFile; fileRef = BFA306C2174EE1A00055A89A /* UISearchBarSolidColor.m */; };
 		BFA35626176490EE00BDEEB6 /* stopwords.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFA35625176490EE00BDEEB6 /* stopwords.plist */; };
 		BFA3562B1764E88B00BDEEB6 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = BFA3562A1764E88B00BDEEB6 /* Tag.m */; };
+		BFA3A79A17A4528300856049 /* NewsIcon@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFA3A79917A4528300856049 /* NewsIcon@2x.jpg */; };
+		BFA3A79C17A454EA00856049 /* SportsIcon@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFA3A79B17A454EA00856049 /* SportsIcon@2x.jpg */; };
+		BFA3A7A117A45D3200856049 /* OpinionIcon@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFA3A79F17A45D3200856049 /* OpinionIcon@2x.jpg */; };
 		BFA9D9A71755A68600BFFD11 /* IMG_7248.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFA9D9A61755A68500BFFD11 /* IMG_7248.jpg */; };
 		BFB21AE3172374AB006EC547 /* NewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB21AE1172374AB006EC547 /* NewsViewController.m */; };
 		BFB21AE4172374AB006EC547 /* NewsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BFB21AE2172374AB006EC547 /* NewsViewController.xib */; };
@@ -89,6 +92,7 @@
 		BFCB06651725D451002DD34A /* IIWrapController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCB06631725D356002DD34A /* IIWrapController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		BFCE0B221749F0D50078DFF9 /* RootSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCE0B211749F0D50078DFF9 /* RootSplitViewController.m */; };
 		BFD1CB7E17228DC00083E2CA /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BFD1CB7D17228DC00083E2CA /* libz.1.2.5.dylib */; };
+		BFD416F017A51803000D75CD /* LifestyleIcon@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFD416EF17A51803000D75CD /* LifestyleIcon@2x.jpg */; };
 		BFD4B2C317908F41002E9D32 /* iPhone5@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFD4B2C117908F41002E9D32 /* iPhone5@2x.jpg */; };
 		BFD4B2C617908FA6002E9D32 /* iPhone4@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFD4B2C517908FA6002E9D32 /* iPhone4@2x.jpg */; };
 		BFD7569E1733A8470081DE4C /* NavBarIconLauncher@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD7569D1733A8470081DE4C /* NavBarIconLauncher@2x.png */; };
@@ -215,6 +219,9 @@
 		BFA35625176490EE00BDEEB6 /* stopwords.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = stopwords.plist; sourceTree = "<group>"; };
 		BFA356291764E88B00BDEEB6 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
 		BFA3562A1764E88B00BDEEB6 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
+		BFA3A79917A4528300856049 /* NewsIcon@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "NewsIcon@2x.jpg"; sourceTree = "<group>"; };
+		BFA3A79B17A454EA00856049 /* SportsIcon@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "SportsIcon@2x.jpg"; sourceTree = "<group>"; };
+		BFA3A79F17A45D3200856049 /* OpinionIcon@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "OpinionIcon@2x.jpg"; sourceTree = "<group>"; };
 		BFA9D9A61755A68500BFFD11 /* IMG_7248.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = IMG_7248.jpg; path = ../IMG_7248.jpg; sourceTree = "<group>"; };
 		BFB1DF6E173CAA1D00F902C8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		BFB21AE0172374AB006EC547 /* NewsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsViewController.h; sourceTree = "<group>"; };
@@ -239,6 +246,7 @@
 		BFCE0B211749F0D50078DFF9 /* RootSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootSplitViewController.m; sourceTree = "<group>"; };
 		BFCFAAA5175C8538004FBC34 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		BFD1CB7D17228DC00083E2CA /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
+		BFD416EF17A51803000D75CD /* LifestyleIcon@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "LifestyleIcon@2x.jpg"; sourceTree = "<group>"; };
 		BFD4B2C117908F41002E9D32 /* iPhone5@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iPhone5@2x.jpg"; sourceTree = "<group>"; };
 		BFD4B2C517908FA6002E9D32 /* iPhone4@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iPhone4@2x.jpg"; sourceTree = "<group>"; };
 		BFD5503F1768D5D800843F1F /* Entry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Entry.h; sourceTree = "<group>"; };
@@ -306,6 +314,10 @@
 			isa = PBXGroup;
 			children = (
 				BFA35625176490EE00BDEEB6 /* stopwords.plist */,
+				BFD416EF17A51803000D75CD /* LifestyleIcon@2x.jpg */,
+				BFA3A79F17A45D3200856049 /* OpinionIcon@2x.jpg */,
+				BFA3A79B17A454EA00856049 /* SportsIcon@2x.jpg */,
+				BFA3A79917A4528300856049 /* NewsIcon@2x.jpg */,
 				BF0D3E4A175E38D1007A5731 /* Default@2x.png */,
 				BFCFAAA5175C8538004FBC34 /* Default.png */,
 				BF67026E174616FC001B687C /* iconiPad.png */,
@@ -628,7 +640,9 @@
 				BFD9E81F17253C4000D81A94 /* LifestyleViewController.xib in Resources */,
 				BFCB06601725CD8D002DD34A /* LeftViewController.xib in Resources */,
 				BFD87E7317336F6B0022B889 /* iconRetina.png in Resources */,
+				BFD416F017A51803000D75CD /* LifestyleIcon@2x.jpg in Resources */,
 				BFD87E7517336FA10022B889 /* icon.png in Resources */,
+				BFA3A79C17A454EA00856049 /* SportsIcon@2x.jpg in Resources */,
 				BFD4B2C617908FA6002E9D32 /* iPhone4@2x.jpg in Resources */,
 				BFD7569E1733A8470081DE4C /* NavBarIconLauncher@2x.png in Resources */,
 				BF9C6D051734D28900EF66B7 /* Lifestyle@2x.png in Resources */,
@@ -642,7 +656,9 @@
 				BF3E6822175CD61100C466D6 /* AFNetworking.podspec in Resources */,
 				BF3E6823175CD61100C466D6 /* LICENSE in Resources */,
 				BF3E6824175CD61100C466D6 /* README.md in Resources */,
+				BFA3A79A17A4528300856049 /* NewsIcon@2x.jpg in Resources */,
 				BF0D3E49175E38B0007A5731 /* Default-568h@2x.png in Resources */,
+				BFA3A7A117A45D3200856049 /* OpinionIcon@2x.jpg in Resources */,
 				BF0D3E4B175E38D1007A5731 /* Default@2x.png in Resources */,
 				BFA35626176490EE00BDEEB6 /* stopwords.plist in Resources */,
 			);

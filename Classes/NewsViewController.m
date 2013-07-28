@@ -161,7 +161,6 @@
             entry.author = [author copy];
             
             [author appendFormat:@"\n\n"];
-            //            NSLog(@"%@", author);
         }else if([[element tagName] isEqualToString:@"h1"]){
             title = [self getStringForTFHppleElement: child];
             if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
@@ -280,7 +279,7 @@
             [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:entry.story.content attributes:dict]];
             [textStorage endEditing];
             
-            NSLog(@"%f", textView.contentSize.height);
+//            NSLog(@"%f", textView.contentSize.height);
             [textView sizeToFit];
             [scrollView sizeToFit];
         }else{
@@ -362,7 +361,7 @@
     size.height = textHeight + titleHeight + EMPTYVIEW + 80;
     scrollView.contentSize = size;
     
-    NSLog(@"%f", scrollView.contentSize.height);
+//    NSLog(@"%f", scrollView.contentSize.height);
 }
 
 - (void)loadDetails {
@@ -588,6 +587,7 @@
     scrollView.delegate = self;
     backgroundImage = [[UIImageView alloc] initWithFrame:scrollView.frame];
     self.view.backgroundColor = [UIColor blackColor];
+    [scrollView addSubview:backgroundImage];
 
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
@@ -623,7 +623,10 @@
         textViewFrame.size = textView.contentSize;
         textView.frame = textViewFrame;
         
+        [scrollView addSubview:textView];
         
+        [self.view addSubview:scrollView];
+
         
         
 //    [scrollView addSubview:view];
@@ -640,7 +643,9 @@
         titleText.layer.shadowOpacity = 1.0f;
         titleText.layer.shadowRadius = 1.0f;
         
-        textView = [[UITextView alloc] initWithFrame:CGRectMake(0, titleText.frame.origin.y + titleText.frame.size.height, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)];
+//        textView = [[UITextView alloc] initWithFrame:CGRectMake(0, titleText.frame.origin.y + titleText.frame.size.height, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)];
+        textView = [UITextView new];
+        [textView setTranslatesAutoresizingMaskIntoConstraints:NO];
         textView.editable = NO;
         textView.scrollEnabled = NO;
         textView.backgroundColor = [UIColor blackColor];
@@ -649,15 +654,22 @@
         
         textView.textColor = [UIColor blackColor];
         
-        [scrollView addSubview:titleText];
+//        [self.view addSubview:titleText];
         [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
+        [scrollView addSubview:textView];
+        [scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [backgroundImage setTranslatesAutoresizingMaskIntoConstraints:NO];
+        NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(scrollView, backgroundImage);
+//        [self.view addSubview:textView];
+        [self.view addSubview:scrollView];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
+        [scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[backgroundImage]|" options:0 metrics: 0 views:viewsDictionary]];
+        [scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImage]|" options:0 metrics: 0 views:viewsDictionary]];
+    
     }
     
-    [scrollView addSubview:textView];
 
-    [self.view addSubview:scrollView];
-
-    [self.view addSubview:backgroundImage];
     
 }
 

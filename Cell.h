@@ -12,5 +12,5 @@
 @property (strong, nonatomic) IBOutlet UILabel *mainLabel;
 @property (strong, nonatomic) IBOutlet UILabel *secondLabel;
 @property (strong, nonatomic) IBOutlet UILabel *category;
-
+@property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @end

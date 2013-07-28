@@ -41,7 +41,7 @@
 //    [[self tableView] setBackgroundColor: [UIColor colorWithRed:120/255.0f green:21/255.0f blue:27/255.0f alpha:1.0f]];
     if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
         
-        [[UITableViewHeaderFooterView appearance] setTintColor:[UIColor colorWithRed:233/255.0f green:250/255.0f blue:247/255.0f alpha:1.0f]];
+        [[UITableViewHeaderFooterView appearance] setTintColor:[UIColor colorWithRed:250/255.0f green:250/255.0f blue:250/255.0f alpha:1.0f]];
     //    [[UITableViewCell appearance] setTintColor: [UIColor blueColor]];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -105,6 +105,26 @@
     
     if(!cell){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        if(indexPath.section == 1){
+            
+            CAGradientLayer *gradient = [CAGradientLayer layer];
+            gradient.opacity = 1;
+            gradient.frame = cell.bounds;
+            NSLog(@"%f %f", cell.frame.size.height, cell.frame.size.width);
+            NSLog(@"%f %f", gradient.frame.size.height, gradient.frame.size.width);
+
+//            gradient.startPoint = CGPointMake(0, 0.5);
+//            gradient.endPoint = CGPointMake(1.0, 0.5);
+            gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor clearColor] CGColor], (id)[[UIColor blackColor] CGColor], nil];
+            UIView *background = [UIView new];
+            [background.layer insertSublayer:gradient atIndex:0];
+//            cell.backgroundView = background;
+//            [cell.layer insertSublayer:gradient below:cell.textLabel.layer];
+//            [cell.contentView.layer insertSublayer:gradient below:cell.textLabel.layer];
+//            cell.backgroundColor = [UIColor blackColor];
+
+        }
+
     }
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -171,22 +191,15 @@
     UIView *bgColorView = [[UIView alloc] init];
 //    [bgColorView setBackgroundColor: [UIColor colorWithRed:108/255.0f green:16/255.0f blue:24/255.0f alpha:0.6]];
 //    [bgColorView setBackgroundColor: [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:0.6]];
-
+    
     cell.selectedBackgroundView = bgColorView;
     cell.detailTextLabel.textColor =  [UIColor colorWithRed:150/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
+    cell.textLabel.backgroundColor = [UIColor clearColor];
+    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
         cell.detailTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
     //    cell.selectionStyle = UITableViewCellSelectionStyleGray;
 //    cell.textLabel.textColor = [UIColor whiteColor];
-    if(indexPath.section == 1 && indexPath.row == 0){
-        CAGradientLayer *gradient = [CAGradientLayer layer];
-        gradient.opacity = 1;
-        [gradient setStartPoint:CGPointMake(0.0, 0.5)];
-        [gradient setEndPoint:CGPointMake(1.0, 0.5)];
-        gradient.frame = cell.frame;
-        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor clearColor] CGColor], (id)[[UIColor blackColor] CGColor], nil];
-        [cell.layer insertSublayer:gradient below:cell.layer];
-    }
     
     //    [[cell contentView] setBackgroundColor:color];
     
