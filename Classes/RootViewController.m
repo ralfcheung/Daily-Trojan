@@ -215,9 +215,11 @@
     
     UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
     [refresh addTarget:self action:@selector(refreshView:) forControlEvents:UIControlEventValueChanged];
-    refresh.tintColor = [UIColor colorWithRed:100/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
+    refresh.tintColor = [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.0f];
     refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing"];
-    //    self.refreshControl = refresh;
+    [refresh endRefreshing];
+    self.refreshControl = refresh;
+    
     
     UIColor *bgRefreshColor = [UIColor colorWithRed:100/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
 
@@ -253,19 +255,18 @@
         _navBar = [[UINavigationBarWithoutGradient alloc] init];
         self.navigationItem.leftBarButtonItem = [UIBarButtonItem barItemWithImage:[UIImage imageNamed:@"menu.png"] target:self.viewDeckController action:@selector(toggleLeftView)];
         [self.navigationController setValue:_navBar forKey:@"navigationBar"];
-        
-        //    [self.navigationController setNavigationBarHidden:YES];
-        
+                
 //        [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
-//        for (UIView *subview in _searchBar.subviews) {
-//            if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")]) {
-//                UIView *bg = [[UIView alloc] initWithFrame:subview.frame];
-//                bg.backgroundColor = [UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
-//                [_searchBar insertSubview:bg aboveSubview:subview];
-//                [subview removeFromSuperview];
-//                break;
-//            }
-//        }
+        
+        for (UIView *subview in _searchBar.subviews) {
+            if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")]) {
+                UIView *bg = [[UIView alloc] initWithFrame:subview.frame];
+                bg.backgroundColor = [UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
+                [_searchBar insertSubview:bg aboveSubview:subview];
+                [subview removeFromSuperview];
+                break;
+            }
+        }
         UIView *view = [[UIView alloc] init];
         view.backgroundColor = [UIColor blackColor];
         UILabel *label = [[UILabel alloc] init];
@@ -458,7 +459,7 @@
 
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+    /*
     
     
     if(indexPath.row == [_allEntries count] - 1){
@@ -480,6 +481,7 @@
         _allEntries = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
         [self.tableView reloadData];
     }
+     */
 }
 
 

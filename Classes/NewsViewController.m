@@ -56,7 +56,7 @@
 @synthesize backgroundImage;
 @synthesize title;
 @synthesize visible;
-@synthesize captions = _captions;
+@synthesize captions;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize scrollView;
 @synthesize filter;
@@ -248,18 +248,20 @@
             UIFontDescriptor *fontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle: UIFontTextStyleHeadline];
             UIFontDescriptor *titleFontDescriptor = [fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
             
-            UIFontDescriptor *helveticaNeueFamily = [UIFontDescriptor fontDescriptorWithFontAttributes: @{ UIFontDescriptorFamilyAttribute: @"Helvetica Neue"}];
+            UIFontDescriptor *helveticaNeueFamily = [UIFontDescriptor fontDescriptorWithFontAttributes: @{ UIFontDescriptorFamilyAttribute: @"HelveticaNeue"}];
         NSArray *matches = [helveticaNeueFamily matchingFontDescriptorsWithMandatoryKeys:nil];
             UIFont *titleFont;
 
             for (UIFontDescriptor *desc in matches) {
                 if([desc.postscriptName isEqualToString:@"HelveticaNeue-Light"]){
-                    titleFont = [UIFont fontWithDescriptor:desc size:28.0];
-//                    desc 
+                    titleFont = [UIFont fontWithDescriptor:desc size:0.0];
                 }
             }
-
             
+            UIFontDescriptor *boldFontDescriptor =
+            [fontDescriptor fontDescriptorWithSymbolicTraits:
+             UIFontDescriptorTraitUIOptimized];
+            titleFont = [UIFont fontWithDescriptor: boldFontDescriptor size: 0.0];
 //HelveticaNeue-Light, UIFontDescriptorNameAttribute
 //        NSLog(@"%@", matches);
             
@@ -278,7 +280,6 @@
             [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:entry.story.content attributes:dict]];
             [textStorage endEditing];
             
-//            NSLog(@"%f", textView.contentSize.height);
             [textView sizeToFit];
             [scrollView sizeToFit];
         }else{
@@ -291,19 +292,19 @@
 
         
         if(entry.story.captions){
-            _captions.text = entry.story.captions;
-            _captions.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4f];
-            _captions.textColor = [UIColor whiteColor];
-            _captions.alpha = 0;
-            _captions.editable = NO;
-            _captions.userInteractionEnabled = YES;
-            [_captions setScrollEnabled:YES];
+            captions.text = entry.story.captions;
+            captions.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4f];
+            captions.textColor = [UIColor whiteColor];
+            captions.alpha = 0;
+            captions.editable = NO;
+            captions.userInteractionEnabled = YES;
+            [captions setScrollEnabled:YES];
 //            [_captions setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
             if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
 //                if([_captions respondsToSelector:@selector(setFont:)])
-                [_captions setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleCaption2]];
-            _captions.isAccessibilityElement = YES;
-            _captions.accessibilityLabel = @"Captions";
+                [captions setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleCaption1]];
+            captions.isAccessibilityElement = YES;
+            captions.accessibilityLabel = @"Captions";
             
         }
         
@@ -314,13 +315,12 @@
         
 
         visible = YES;
-        
+        NSLog(@"%f", textView.contentSize.height);
         if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
-            [self TFHppleFinishLoading];
+       [self TFHppleFinishLoading];
         
     });
-//    [self getRanking];
-    
+
 }
 
 -(void) TFHppleFinishLoading{
@@ -343,14 +343,20 @@
     
     [self.view addSubview:view];
     [self.view addSubview:titleView];
-    NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(scrollView, textView, titleText, titleView, view);
+    NSDictionary *viewsDictionary;
+
+    viewsDictionary = NSDictionaryOfVariableBindings(scrollView, textView, titleText, titleView, view);
     
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[textView(==scrollView)]|" options:0 metrics: 0 views:viewsDictionary]];
+  
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[titleText(==scrollView)]|" options:0 metrics:0 views:viewsDictionary]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-280-[titleText(==titleView)]-[textView(==view)]|" options:0 metrics: 0 views:viewsDictionary]];
-
+    
+//    [self.backgroundImage addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[captions]|" options:0 metrics:0 views:NSDictionaryOfVariableBindings(captions)]];
+//    [self.backgroundImage addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-450-[captions]|" options:0 metrics:0 views:NSDictionaryOfVariableBindings(captions)]];
+    
 }
 
 - (void)loadDetails {
@@ -374,23 +380,23 @@
                 topGradient.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 40);
             }
             if(sizeResult.height == 1136){
-                //                NSLog(@"iPhone 5 Resolution");
+//                NSLog(@"iPhone 5 Resolution");
             }
         } else {
-            //            NSLog(@"iPhone Standard Resolution");
+//            NSLog(@"iPhone Standard Resolution");
         }
     }
-    //    gradient.frame = CGRectMake(0, ([UIScreen mainScreen].bounds.size.height * 5 / 6) /2 , [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height / 6);
+//    gradient.frame = CGRectMake(0, ([UIScreen mainScreen].bounds.size.height * 5 / 6) /2 , [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height / 6);
     gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor clearColor] CGColor], (id)[[UIColor blackColor] CGColor], nil];
     topGradient.colors = [NSArray arrayWithObjects:(id)[[UIColor blackColor] CGColor], (id)[[UIColor clearColor] CGColor], nil];
-    //    [self.view.layer insertSublayer:gradient atIndex:0];
+//    [self.view.layer insertSublayer:gradient atIndex:0];
     [self.view.layer insertSublayer:topGradient below:textView.layer];
     [self.view.layer insertSublayer:gradient below:textView.layer];
     
     
     [self generateImage];
     
-    //    NSData* data = [content dataUsingEncoding:NSUTF8StringEncoding];
+//    NSData* data = [content dataUsingEncoding:NSUTF8StringEncoding];
 //    content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
 }
@@ -400,7 +406,6 @@
     
     
     NSArray *array = [NSArray arrayWithObjects:titleText.text, textView.text, nil];
-    
     UIActivityViewController *avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
     [self presentViewController:avc animated:YES completion:nil];
     
@@ -412,14 +417,11 @@
     dispatch_queue_t downloadQueue = dispatch_queue_create("image downloader", NULL);
     dispatch_async(downloadQueue, ^{
         [backgroundImage setContentMode:UIViewContentModeScaleToFill];
-        NSLog(@"%@", imageUrl);
         if(!imageUrl){
             _image = [UIImage imageNamed:@"iPhone5.jpg"];
-            NSLog(@"going in");
         }else{
             NSData *data = [NSData dataWithContentsOfURL:link];
             _image = [[UIImage alloc] initWithData:data];
-        NSLog(@"Finished downloading image");
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             backgroundImage.image = [_image applyBlurWithRadius:8 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
@@ -457,9 +459,6 @@
     //                        options:UIViewAnimationOptionCurveLinear
     //                     animations:^{
     //                         CGRect imageViewFrame = self.backgroundImage.frame;
-    //                         NSLog(@"%f %f\n", backgroundImage.image.size.height, backgroundImage.image.size.width);
-    //                         NSLog(@"%f \n", imageViewFrame.origin.x - backgroundImage.image.size.width);
-    //                         NSLog(@"%f \n", [[UIScreen mainScreen] bounds].size.width);
     //                         CGRect a = AVMakeRectWithAspectRatioInsideRect(backgroundImage.image.size, imageViewFrame);
     //                         imageViewFrame.origin.x = CGRectGetWidth(imageViewFrame) / -2;
     //                         self.backgroundImage.frame = imageViewFrame;
@@ -519,10 +518,6 @@
     
     //    self.view.backgroundColor = [UIColor blackColor];
     //    [self.navigationController setValue:[[UINavigationBarTransparent alloc] init] forKey:@"navigationBar"];
-    //    textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 260, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)];
-    
-    
-    
     
     //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     
@@ -531,10 +526,9 @@
     UIBarButtonItem *loadingView = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareButton:)];
     UIBarButtonItem *speech = [[UIBarButtonItem alloc] initWithTitle:@"Speech" style:UIBarButtonItemStylePlain target:self action:@selector(speak:)];
     
-    [self.navigationItem setRightBarButtonItem:speech];
+    [self.navigationItem setRightBarButtonItem:loadingView];
     
-    [_captions setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.4f]];
-    
+
     _HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:_HUD];
     _HUD.delegate = self;
@@ -547,8 +541,12 @@
     av = [[AVSpeechSynthesizer alloc]init];
     av.delegate = self;
     
-    [self.view addSubview:_captions];
     
+    dispatch_queue_t downloadQueue = dispatch_queue_create("get ranking queue", NULL);
+    dispatch_async(downloadQueue, ^{
+
+        [self getRanking];
+    });
     
 }
 
@@ -577,11 +575,20 @@
     backgroundImage = [[UIImageView alloc] initWithFrame:scrollView.frame];
     self.view.backgroundColor = [UIColor blackColor];
     [self.view addSubview:backgroundImage];
+    [self.view addSubview:scrollView];
 
+    captions = [[UITextView alloc] init];
+    [captions setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.4f]];
+    [self.backgroundImage addSubview:captions];
+    
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[scrollView]|" options:0 metrics:0 views:NSDictionaryOfVariableBindings(scrollView)]];
+
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]|" options:0 metrics:0 views:NSDictionaryOfVariableBindings(scrollView)]];
+    
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         
-        CGRect newTextViewRect = CGRectInset(self.view.bounds, 8., 10.);
+        CGRect newTextViewRect = CGRectInset(self.view.frame, 8., 10.);
         
         textStorage = [[NSTextStorage alloc] init];
         
@@ -597,10 +604,10 @@
         textView = [[UITextView alloc] initWithFrame:newTextViewRect textContainer:container];
         
         textView.editable = NO;
-        textView.scrollEnabled = NO;
+//        textView.scrollEnabled = NO;
         textView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
         textView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4f];
-        
+
         CGSize size = scrollView.contentSize;
         size.height = textView.contentSize.height + EMPTYVIEW;
         
@@ -609,12 +616,6 @@
         textViewFrame.origin.y += EMPTYVIEW;
         textViewFrame.size = textView.contentSize;
         textView.frame = textViewFrame;
-        
-        [scrollView addSubview:textView];
-        
-        [self.view addSubview:scrollView];
-
-        
         
         
     }else{  //iOS 6
@@ -639,8 +640,6 @@
         textView.textColor = [UIColor blackColor];
         
         [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
-        [self.view addSubview:scrollView];
-        [scrollView addSubview:textView];
         [scrollView addSubview:titleText];
         
         [scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -659,7 +658,8 @@
     }
     
 
-    
+    [scrollView addSubview:textView];
+
 }
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView{
@@ -673,7 +673,6 @@
 }
 
 -(void) bounceScrollView{
-    
     
     CGFloat midHeight = scrollView.frame.size.height * 1.001;
     CAKeyframeAnimation* animation = [[self class] dockBounceAnimationWithViewHeight:midHeight];
@@ -748,7 +747,6 @@
 -(void) tapMethod: (UITapGestureRecognizer*) gesture{
     
     if(visible && backgroundImage.image){
-//        NSLog(@"disappearing\n");
         
         [UIView animateWithDuration:0.1
                               delay:0
@@ -756,7 +754,7 @@
                                 textView.alpha = 0.0;
                                 titleText.alpha = 0.0;
                                 backgroundImage.image = [_image applyBlurWithRadius:0 tintColor:[UIColor clearColor] saturationDeltaFactor:0 maskImage:nil];
-                                _captions.alpha = 1;
+                                captions.alpha = 1;
                                 scrollView.userInteractionEnabled = NO;
                             } completion:^(BOOL finished) {
                                 if(finished){
@@ -764,14 +762,13 @@
                                 }
                             }];
     }else{
-//        NSLog(@"appearing\n");
         [UIView animateWithDuration:0.1
                               delay:0
                             options:UIViewAnimationOptionBeginFromCurrentState animations:^{
                                 textView.alpha = 1.0f;
                                 titleText.alpha = 1.0f;
                                 backgroundImage.image = [_image applyBlurWithRadius:8 tintColor:[UIColor clearColor]saturationDeltaFactor:1.0 maskImage:nil];
-                                _captions.alpha = 0;
+                                captions.alpha = 0;
                                 scrollView.userInteractionEnabled = YES;
                             } completion:^(BOOL finished) {
                                 if(finished){
@@ -789,7 +786,6 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
     
     if([touch.view isKindOfClass:[UIImageView class]]){
-//        NSLog(@"TEST\n");
     }
     
     return NO;
