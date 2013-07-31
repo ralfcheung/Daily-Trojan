@@ -158,20 +158,17 @@
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
     [searchBar setShowsCancelButton:YES animated:YES];
-    self.tableView.allowsSelection = NO;
-    self.tableView.scrollEnabled = NO;
 }
-
-
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [searchBar resignFirstResponder];
-    self.tableView.allowsSelection = YES;
-    self.tableView.scrollEnabled = YES;
+    [self.tableView becomeFirstResponder];
 }
+
+
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
     
     [self performSelector:@selector(searchBarCancelButtonClicked:) withObject:self.searchBar afterDelay: 0.1];
-    [textField resignFirstResponder];
+//    [textField resignFirstResponder];
+    
     return YES;
 }
 
@@ -182,15 +179,16 @@
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     [fetchRequest setEntity:[NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext]];
-    NSPredicate *titlePredicate = [NSPredicate predicateWithFormat:@"SELF.articleTitle beginswith[c] %@ ", searchString];
-    NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", searchString];
-    NSPredicate *authorPredicate = [NSPredicate predicateWithFormat:@"SELF.author beginswith[c] %@", searchString];
+    NSPredicate *titlePredicate = [NSPredicate predicateWithFormat:@"SELF.articleTitle contains[c] %@ ", searchString];
+    NSPredicate *categoryPredicate = [NSPredicate predicateWithFormat:@"SELF.category contains[c] %@", searchString];
+    NSPredicate *authorPredicate = [NSPredicate predicateWithFormat:@"SELF.author contains[c] %@", searchString];
 
     NSArray *array = [NSArray arrayWithObjects:titlePredicate, categoryPredicate, authorPredicate, nil];
     NSPredicate *predicate = [NSCompoundPredicate orPredicateWithSubpredicates:array];
     [fetchRequest setPredicate:predicate];
+//    _allEntries = [[_allEntries filteredArrayUsingPredicate:predicate] mutableCopy];
     searchedEntries = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-    
+//    searchedEntries = _allEntries;
     
     return YES;
 }
@@ -334,7 +332,6 @@
     NSPredicate *predicate;
     
     if([self.title isEqualToString:@"Sports"]){
-        
         NSArray *array = [NSArray arrayWithObjects:
                           [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Baseball"],[NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Basketball"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Football"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Golf"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Soccer"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Tennis"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Track and Field"],  [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Volleyball"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Water Polo"], [NSPredicate predicateWithFormat:@"category = %@", self.title], nil];
         predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
@@ -344,9 +341,8 @@
         
         predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
         
-    }else if([self.title isEqualToString:@"LifeStyle"]){
+    }else if([self.title isEqualToString:@"Lifestyle"]){
         NSArray *array = [NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Film"] ,[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Games"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Music"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Reviews"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Theatre"] ,[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", self.title],  nil];
-        
         predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
         
     }else if([self.title isEqualToString:@"Opinion"]){
@@ -595,7 +591,7 @@
             cell.imageView.image = [UIImage imageNamed:@"NewsIcon.jpg"];
         }else if([entry.category isEqualToString:@"Sports"] || [entry.category isEqualToString:@"Football"] || [entry.category isEqualToString:@"Golf"] || [entry.category isEqualToString:@"Water Polo"] || [entry.category isEqualToString:@"Baseball"] || [entry.category isEqualToString:@"Basketball"])
             cell.imageView.image = [UIImage imageNamed:@"SportsIcon.jpg"];
-        else if([entry.category isEqualToString:@"Lifestyle"])
+        else if([entry.category isEqualToString:@"Lifestyle"] || [entry.category isEqualToString:@"Game"] || [entry.category isEqualToString:@"Film"] || [entry.category isEqualToString:@"Reviews"] || [entry.category isEqualToString:@"Theatre"] || [entry.category isEqualToString:@"Music"])
             cell.imageView.image = [UIImage imageNamed:@"LifestyleIcon.jpg"];
         else if([entry.category isEqualToString:@"Opinion"])
             cell.imageView.image = [UIImage imageNamed:@"OpinionIcon.jpg"];

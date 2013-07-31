@@ -553,13 +553,7 @@
     av = [[AVSpeechSynthesizer alloc]init];
     av.delegate = self;
     
-    
-    dispatch_queue_t downloadQueue = dispatch_queue_create("get ranking queue", NULL);
-    dispatch_async(downloadQueue, ^{
 
-//        [self getRanking];
-    });
-    
 }
 
 
@@ -582,7 +576,7 @@
 -(void)finishedTagging:(TagRankingOperation *)tagsOps{
     
     NSDictionary *tagDic = tagsOps.tags;
-    Tag *tag = [[Tag alloc] init];
+//    Tag *tag = [[Tag alloc] init];
     [tagDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         NSLog(@"%@", (NSString*)key );
         NSDictionary * wordDic = obj;
@@ -773,7 +767,7 @@
 
 -(void) tapMethod: (UITapGestureRecognizer*) gesture{
     
-    if(visible && backgroundImage.image){
+    if(visible && imageUrl){
         
         [UIView animateWithDuration:0.1
                               delay:0
