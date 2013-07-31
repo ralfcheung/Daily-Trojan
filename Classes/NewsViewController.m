@@ -582,7 +582,7 @@
 -(void)finishedTagging:(TagRankingOperation *)tagsOps{
     
     NSDictionary *tagDic = tagsOps.tags;
-
+    Tag *tag = [[Tag alloc] init];
     [tagDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         NSLog(@"%@", (NSString*)key );
         NSDictionary * wordDic = obj;
@@ -782,6 +782,7 @@
                                 titleText.alpha = 0.0;
                                 backgroundImage.image = [_image applyBlurWithRadius:0 tintColor:[UIColor clearColor] saturationDeltaFactor:0 maskImage:nil];
                                 captions.alpha = 1;
+                                
                                 scrollView.userInteractionEnabled = NO;
                             } completion:^(BOOL finished) {
                                 if(finished){
