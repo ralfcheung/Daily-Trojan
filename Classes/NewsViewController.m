@@ -14,10 +14,6 @@
 #import "UINavigationBarTransparent.h"
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
-#import "Story+DT.h"
-#import "Reachability.h"
-#import "UIImage+ImageEffects.h"
-#import "WebImageOperations.h"
 
 #define EMPTYVIEW 300
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
@@ -44,6 +40,7 @@
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, strong) NSTextStorage *textStorage;
 @property (nonatomic, retain) AVSpeechSynthesizer *av;
+@property (nonatomic, retain) NSOperationQueue *operationQueue;
 @end
 
 @implementation NewsViewController
@@ -64,6 +61,7 @@
 @synthesize titleText;
 @synthesize textStorage;
 @synthesize av;
+@synthesize operationQueue;
 
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner
@@ -185,9 +183,8 @@
 }
 
 
--(void) loadText{
-    
-    
+
+-(void) downloadHTMLFileAndParseIt{
     NSData *tutorialsHtmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:entry.articleURL]];
     
     if(tutorialsHtmlData){
@@ -237,6 +234,21 @@
         //pop a UIAlert
     }
     
+
+}
+
+
+-(void) loadText{
+    
+    
+
+    [self downloadHTMLFileAndParseIt];
+    
+    TagRankingOperation *taggingOperation = [[TagRankingOperation alloc] init];
+    taggingOperation.text = content;
+    taggingOperation.delegate = self;
+    [operationQueue addOperation:taggingOperation];
+
     //For Facebook style description, uncheck Clip Subviews
     dispatch_async(dispatch_get_main_queue(), ^{
         UIScrollView *scrollText;
@@ -261,7 +273,7 @@
             UIFontDescriptor *boldFontDescriptor =
             [fontDescriptor fontDescriptorWithSymbolicTraits:
              UIFontDescriptorTraitUIOptimized];
-            titleFont = [UIFont fontWithDescriptor: boldFontDescriptor size: 0.0];
+            titleFont = [UIFont fontWithDescriptor: boldFontDescriptor size: 30.0];
 //HelveticaNeue-Light, UIFontDescriptorNameAttribute
 //        NSLog(@"%@", matches);
             
@@ -354,8 +366,6 @@
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[titleText(==scrollView)]|" options:0 metrics:0 views:viewsDictionary]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-280-[titleText(==titleView)]-[textView(==view)]|" options:0 metrics: 0 views:viewsDictionary]];
     
-//    [self.backgroundImage addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[captions]|" options:0 metrics:0 views:NSDictionaryOfVariableBindings(captions)]];
-//    [self.backgroundImage addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-450-[captions]|" options:0 metrics:0 views:NSDictionaryOfVariableBindings(captions)]];
     
 }
 
@@ -521,6 +531,8 @@
     
     //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     
+    operationQueue = [[NSOperationQueue alloc] init];
+
     [self initializeViews];
     
     UIBarButtonItem *loadingView = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareButton:)];
@@ -545,7 +557,7 @@
     dispatch_queue_t downloadQueue = dispatch_queue_create("get ranking queue", NULL);
     dispatch_async(downloadQueue, ^{
 
-        [self getRanking];
+//        [self getRanking];
     });
     
 }
@@ -567,6 +579,21 @@
     
 }
 
+-(void)finishedTagging:(TagRankingOperation *)tagsOps{
+    
+    NSDictionary *tagDic = tagsOps.tags;
+
+    [tagDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        NSLog(@"%@", (NSString*)key );
+        NSDictionary * wordDic = obj;
+        [wordDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            NSLog(@"%@ %d", (NSString*)key, [obj intValue]);
+        }];
+        
+    }];
+    
+    
+}
 
 
 -(void) initializeViews{

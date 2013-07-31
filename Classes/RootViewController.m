@@ -7,7 +7,6 @@
 //
 
 #import "RootViewController.h"
-#import "RSSEntry.h"
 #import "ASIHTTPRequest.h"
 #import "GDataXMLNode.h"
 #import "GDataXMLElement-Extras.h"
@@ -406,7 +405,7 @@
             NSArray *result = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
             
             if(found.location == NSNotFound && ![result count]) {
-                NSLog(@"%@", articleTitle);
+//                NSLog(@"%@", articleTitle);
                 Entry *e = [NSEntityDescription insertNewObjectForEntityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
                 e.articleTitle = articleTitle;
                 e.articleURL = articleUrl;

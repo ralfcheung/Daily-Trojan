@@ -12,8 +12,15 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Entry.h"
 #import <AVFoundation/AVFoundation.h>
+#import "TagRankingOperation.h"
+#import "Story+DT.h"
+#import "Reachability.h"
+#import "UIImage+ImageEffects.h"
+#import "WebImageOperations.h"
+#import "Tag.h"
 
-@interface NewsViewController : UIViewController  <UIGestureRecognizerDelegate, ADBannerViewDelegate, UIGestureRecognizerDelegate, MBProgressHUDDelegate, UIScrollViewDelegate, UITextFieldDelegate, AVSpeechSynthesizerDelegate>
+
+@interface NewsViewController : UIViewController  <UIGestureRecognizerDelegate, ADBannerViewDelegate, UIGestureRecognizerDelegate, MBProgressHUDDelegate, UIScrollViewDelegate, UITextFieldDelegate, AVSpeechSynthesizerDelegate, TaggingDelegate>
 
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;

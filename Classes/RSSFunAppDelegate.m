@@ -2,8 +2,8 @@
 //  RSSFunAppDelegate.m
 //  RSSFun
 //
-//  Created by Ray Wenderlich on 1/24/11.
-//  Copyright 2011 Ray Wenderlich. All rights reserved.
+//  Created by Ralf Cheung on 5/1/13.
+//  Copyright 2013 Ralf Cheung. All rights reserved.
 //
 
 #import "RSSFunAppDelegate.h"
@@ -95,7 +95,6 @@
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://dailytrojan.com/feed/rss/"]];
     NSError *error;
     NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
-    NSLog(@"Refresh");
 //    NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
 //        returnData = data;
 //    }
@@ -158,7 +157,6 @@
                 e.category = category;
                 e.favorite = [NSNumber numberWithInt:0];
                 e.read = [NSNumber numberWithInt:0];
-                NSLog(@"%i", [e.read integerValue]);
                 NSError *error;
                 newData = YES;
                 if(![_managedObjectContext save:&error]){
@@ -240,7 +238,6 @@
 
 
 - (void)application:(UIApplication*)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
-    NSLog(@"test");
     
     
     [rootViewController refreshWithCompletionHandler:^(BOOL didReceiveNewPosts) {
@@ -347,7 +344,7 @@
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Model" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Model 2" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
 }
@@ -362,10 +359,13 @@
     
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Model.sqlite"];
     
+
     NSError *error = nil;
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    /*_persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-        /*
+        
+        
+        
          Replace this implementation with code to handle the error appropriately.
          
          abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -387,11 +387,20 @@
          
          Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
          
-         */
+     
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
-    }
+    }*/
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+                             [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
+                             [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
     
+    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
+    
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
+        // Handle error
+        NSLog(@"Problem with PersistentStoreCoordinator: %@",error);
+    }
     return _persistentStoreCoordinator;
 }
 

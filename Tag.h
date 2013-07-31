@@ -2,7 +2,7 @@
 //  Tag.h
 //  Daily Trojan
 //
-//  Created by Ralf Cheung on 6/10/13.
+//  Created by Ralf Cheung on 7/31/13.
 //
 //
 
@@ -13,5 +13,6 @@
 @interface Tag : NSManagedObject
 
 @property (nonatomic, retain) NSString * word;
+@property (nonatomic) int16_t count;
 
 @end

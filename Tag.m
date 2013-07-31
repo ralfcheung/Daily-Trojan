@@ -2,7 +2,7 @@
 //  Tag.m
 //  Daily Trojan
 //
-//  Created by Ralf Cheung on 6/10/13.
+//  Created by Ralf Cheung on 7/31/13.
 //
 //
 
@@ -12,5 +12,6 @@
 @implementation Tag
 
 @dynamic word;
+@dynamic count;
 
 @end
