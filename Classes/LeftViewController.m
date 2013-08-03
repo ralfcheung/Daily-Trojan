@@ -210,7 +210,6 @@
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
     NSArray *result;
-    NSString *detail;
     switch (indexPath.section) {
         case 0:
             cell.textLabel.text = @"Daily Trojan";
@@ -316,7 +315,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    NSLog(@"rootviewcontroller");
+
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     [self.viewDeckController closeLeftViewBouncing:^(IIViewDeckController *controller) {
@@ -336,13 +336,12 @@
                 RootViewController *rootViewController;
                 if(!indexPath.section){
                     rootViewController = [[RootViewController alloc] initWithLink: nil name: @"Home" managedObjectContext: _managedObjectContext];
-
+                    
                 }else{
 //                NSLog(@"Section: %@", [self.sections objectAtIndex:indexPath.row]);
                     rootViewController = [[RootViewController alloc] initWithLink: nil name: [self.sections objectAtIndex:indexPath.row] managedObjectContext: _managedObjectContext];
                 }
                 controller.centerController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
-                
                 if ([rootViewController respondsToSelector:@selector(tableView)]) {
                     [rootViewController.tableView deselectRowAtIndexPath:[rootViewController.tableView indexPathForSelectedRow] animated:NO];
                 }

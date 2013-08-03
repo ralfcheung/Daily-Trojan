@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIImage+ImageEffects.h"
 
 @interface FirstPageViewController : UIViewController
 @property (nonatomic,strong) NSManagedObjectContext* managedObjectContext;

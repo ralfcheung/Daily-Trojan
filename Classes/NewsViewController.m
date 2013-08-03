@@ -14,6 +14,7 @@
 #import "UINavigationBarTransparent.h"
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
+#import "UIImage+Resize.h"
 
 #define EMPTYVIEW 300
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
@@ -35,12 +36,11 @@
 @property (nonatomic, retain) NSMutableString *author;
 @property (readwrite) BOOL visible;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, retain) CIFilter *filter;
-@property (nonatomic, retain) CIImage *result;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, strong) NSTextStorage *textStorage;
 @property (nonatomic, retain) AVSpeechSynthesizer *av;
 @property (nonatomic, retain) NSOperationQueue *operationQueue;
+@property (nonatomic, retain) NSLayoutManager *layoutManager;
 @end
 
 @implementation NewsViewController
@@ -56,13 +56,11 @@
 @synthesize captions;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize scrollView;
-@synthesize filter;
-@synthesize result;
 @synthesize titleText;
 @synthesize textStorage;
 @synthesize av;
 @synthesize operationQueue;
-
+@synthesize layoutManager;
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner
 {
@@ -145,9 +143,10 @@
     NSMutableString *resultString = [NSMutableString new];
     
     // Iterate recursively through all children
+    author = [NSMutableString new];
+
     for (TFHppleElement *child in [element children]){
         if([[element tagName] isEqualToString:@"span"]){
-            author = [NSMutableString new];
             NSString *authorSt = [self getStringForTFHppleElement:child];
             NSArray *names = [authorSt componentsSeparatedByString: @" "];
             [author appendString:@"By: "];
@@ -155,9 +154,9 @@
                 name = [name stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[name substringToIndex:1] capitalizedString]];
                 [author appendFormat:@"%@ ", name];
             }
-            entry.author = [author copy];
-            
             [author appendFormat:@"\n\n"];
+            entry.author = [author copy];
+            NSLog(@"%@", author);
         }else if([[element tagName] isEqualToString:@"h1"]){
             title = [self getStringForTFHppleElement: child];
             if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
@@ -175,6 +174,7 @@
         }
     }
     
+
     // Hpple creates a <text> node when it parses texts
     if ([element.tagName isEqualToString:@"text"]) [resultString appendString:element.content];
     
@@ -197,13 +197,10 @@
         content = [[NSString alloc] init];
         for (TFHppleElement *element in tutorialsNodes) {
             content = [content stringByAppendingString:[self getStringForTFHppleElement: element]];
-            //        content = [content stringByAppendingString:@"\n\n"];
             
         }
         
-        //    content = [content stringByReplacingOccurrencesOfString:@"\n\n\n" withString:@"\n\n"];
         
-        //    NSLog(@"%@", content);
         NSString *captionString;
         
         tutorialsXpathQueryString = @"//p[@class='wp-caption-text']";
@@ -282,13 +279,13 @@
             
             NSDictionary *titleDic = [NSDictionary dictionaryWithObjectsAndKeys:titleFont, NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
             
-            NSDictionary *nameDic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleCaption1], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
+            NSDictionary *nameDic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
             NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleBody], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
             
-
+            NSLog(@"%@", entry.author);
             [textStorage beginEditing];
             [textStorage setAttributedString:[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", entry.articleTitle] attributes:titleDic]];
-            [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", [author copy]] attributes:nameDic]];
+            [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:entry.author attributes:nameDic]];
             [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:entry.story.content attributes:dict]];
             [textStorage endEditing];
             
@@ -336,8 +333,10 @@
 }
 
 -(void) TFHppleFinishLoading{
+
     
     
+    NSLog(@"%f", [layoutManager usedRectForTextContainer:textView.textContainer].size.height);
     CGFloat titleHeight = titleText.contentSize.height;
     CGFloat textHeight = textView.contentSize.height;
     
@@ -435,8 +434,8 @@
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             backgroundImage.image = [_image applyBlurWithRadius:8 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
-            backgroundImage.contentMode = UIViewContentModeScaleAspectFill;
-            
+            backgroundImage.image = [backgroundImage.image resizedImageByMagick:@"640x1136#"];
+
             [backgroundImage setClipsToBounds:YES];
             [backgroundImage.superview sendSubviewToBack:backgroundImage];
             
@@ -478,28 +477,6 @@
     
 }
 
-- (UIImage*) scaleImage:(UIImage*)image toSize:(CGSize)newSize {
-    CGSize scaledSize = newSize;
-    float scaleFactor = 1.0;
-    if( image.size.width > image.size.height ) { //horizontal
-        scaleFactor = image.size.width / image.size.height;
-        scaledSize.width = newSize.width;
-        scaledSize.height = newSize.height / scaleFactor;
-    }
-    else {//vertical
-        scaleFactor = image.size.height / image.size.width;
-        scaledSize.height = newSize.height;
-        scaledSize.width = newSize.width / scaleFactor;
-    }
-    
-    UIGraphicsBeginImageContextWithOptions( scaledSize, NO, 0.0 );
-    CGRect scaledImageRect = CGRectMake( 0.0, 0.0, scaledSize.width, scaledSize.height );
-    [image drawInRect:scaledImageRect];
-    UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return scaledImage;
-}
 
 
 - (void) imageViewAnimation: (CGFloat) time frame:(CGRect)frame{
@@ -578,10 +555,10 @@
     NSDictionary *tagDic = tagsOps.tags;
 //    Tag *tag = [[Tag alloc] init];
     [tagDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSLog(@"%@", (NSString*)key );
+//        NSLog(@"%@", (NSString*)key );
         NSDictionary * wordDic = obj;
         [wordDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            NSLog(@"%@ %d", (NSString*)key, [obj intValue]);
+//            NSLog(@"%@ %d", (NSString*)key, [obj intValue]);
         }];
         
     }];
@@ -613,14 +590,12 @@
         
         textStorage = [[NSTextStorage alloc] init];
         
-        NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+        layoutManager = [[NSLayoutManager alloc] init];
         NSTextContainer *container = [[NSTextContainer alloc] initWithSize:CGSizeMake(newTextViewRect.size.width, CGFLOAT_MAX)];
         
         container.widthTracksTextView = YES;
         [layoutManager addTextContainer:container];
         
-        
-        [layoutManager addTextContainer:container];
         [textStorage addLayoutManager:layoutManager];
         textView = [[UITextView alloc] initWithFrame:newTextViewRect textContainer:container];
         

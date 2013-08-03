@@ -12,6 +12,39 @@
 
 @implementation UIImage (ImageEffects)
 
++ (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
+        if ([[UIScreen mainScreen] scale] == 2.0) {
+            UIGraphicsBeginImageContextWithOptions(newSize, YES, 2.0);
+        } else {
+            UIGraphicsBeginImageContext(newSize);
+        }
+    } else {
+        UIGraphicsBeginImageContext(newSize);
+    }
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+
+- (UIImage*)scaleToSize:(CGSize)size {
+    UIGraphicsBeginImageContext(size);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(context, 0.0, size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    
+    CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, size.width, size.height), self.CGImage);
+    
+    UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return scaledImage;
+}
+
 
 
 - (UIImage *)applyLightEffect

@@ -12,6 +12,8 @@
 #import "LeftViewController.h"
 #import "RootSplitViewController.h"
 #import "UINavigationBarWithoutGradient.h"
+#import "FirstPageViewController.h"
+
 
 @interface RSSFunAppDelegate : NSObject <UIApplicationDelegate, UIAppearanceContainer> {
     
@@ -27,6 +29,7 @@
 @property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
 @property (nonatomic, retain) UITableViewController *leftViewController;
 @property (nonatomic, retain) RootViewController *rootViewController;
+@property (nonatomic, retain) FirstPageViewController *firstPageController;
 @property (nonatomic, retain) LeftViewController *leftVC;
 @property (nonatomic, retain) UIViewController *centerController;
 @property (nonatomic, retain) RootSplitViewController *splitViewController;

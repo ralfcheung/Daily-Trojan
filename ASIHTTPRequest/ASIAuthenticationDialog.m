@@ -216,7 +216,8 @@ static const NSUInteger kDomainSection = 1;
 
 + (void)dismiss
 {
-	[[sharedDialog parentViewController] dismissModalViewControllerAnimated:YES];
+//	[[sharedDialog parentViewController] dismissModalViewControllerAnimated:YES];
+    [[sharedDialog parentViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

@@ -7,6 +7,8 @@
 //
 
 #import "FirstPageViewController.h"
+#import "UIImage+Resize.h"
+#import "FlickrFetcher.h"
 
 @interface FirstPageViewController ()
 
@@ -49,30 +51,27 @@
     //    @"http://dailytrojan.com/category/sports//feed/";
     //    @"http://dailytrojan.com/category/opinion//feed/";
     
-//    self.view.backgroundColor = [UIColor blackColor];
-    
+    self.view.backgroundColor = [UIColor whiteColor];
     newsLabel = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     sportsLabel =  [UIButton buttonWithType:UIButtonTypeRoundedRect];
     lifestyleLabel = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     opinionLabel = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 
+    
     [newsLabel setTitle:@"New building for Interactive Media Program holds top resources" forState:UIControlStateNormal];
     [sportsLabel setTitle:@"Adam Landecker collects another postseason award" forState:UIControlStateNormal];
     [lifestyleLabel setTitle:@"Neighborhood Academic Initiative continues to help students excel" forState:UIControlStateNormal];
     [opinionLabel setTitle:@"Failed to get token, error: Error Domain continues to help students " forState:UIControlStateNormal];
     
-    
-    newsLabel.backgroundColor = [UIColor blackColor];
-    sportsLabel.backgroundColor = [UIColor blackColor];
-    lifestyleLabel.backgroundColor = [UIColor blackColor];
-    opinionLabel.backgroundColor = [UIColor blackColor];
+    [newsLabel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [sportsLabel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [lifestyleLabel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [opinionLabel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 
 //    [newsLabel setContentEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
 //    [sportsLabel setContentEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
 //    [lifestyleLabel setContentEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
 //    [opinionLabel setContentEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-    
-    newsLabel.titleLabel.textColor = [UIColor whiteColor];
     
 //    newsLabel.titleLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
 //    newsLabel.titleLabel.layer.shadowOffset = CGSizeMake(0.3f, 0.3f);
@@ -90,6 +89,12 @@
     lifestyleLabel.titleLabel.numberOfLines = 3;
     opinionLabel.titleLabel.numberOfLines = 3;
 
+    dispatch_queue_t loaderQ = dispatch_queue_create("flickr latest loader", NULL);
+    dispatch_async(loaderQ, ^{
+
+        [self loadPhoto];
+    });
+    
     [self.view addSubview:newsLabel];
     [self.view addSubview:sportsLabel];
     [self.view addSubview:lifestyleLabel];
@@ -99,22 +104,54 @@
     
     NSDictionary *viewDictionary = NSDictionaryOfVariableBindings(newsLabel, sportsLabel, lifestyleLabel, opinionLabel);
     
-    NSArray *aconstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-300-[newsLabel]-10-[sportsLabel(==newsLabel)]-10-[lifestyleLabel(==sportsLabel)]-10-[opinionLabel(==lifestyleLabel)]-10-|" options:NSLayoutFormatDirectionMask metrics:nil views:viewDictionary];
-    for (int i = 0; i< aconstraints.count; i++) [self.view addConstraint:aconstraints[i]];
     
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-300-[newsLabel]-10-[sportsLabel(==newsLabel)]-10-[lifestyleLabel(==sportsLabel)]-10-[opinionLabel(==lifestyleLabel)]-10-|" options:NSLayoutFormatDirectionMask metrics:nil views:viewDictionary]];
+   
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-[newsLabel]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:viewDictionary]];
+    
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-[sportsLabel]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:viewDictionary]];
+    
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-[lifestyleLabel]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:viewDictionary]];
+    
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-[opinionLabel]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:viewDictionary]];
+    
+}
 
-    aconstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|-[newsLabel]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:viewDictionary];
-    for (int i = 0; i< aconstraints.count; i++) [self.view addConstraint:aconstraints[i]];
+- (void) loadPhoto{
     
-    aconstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|-[sportsLabel]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:viewDictionary];
-    for (int i = 0; i< aconstraints.count; i++) [self.view addConstraint:aconstraints[i]];
+    UIImage *image = [self loadFromFlickr];
+
+    NSArray * paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString * basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+
+    NSData * binaryImageData = UIImagePNGRepresentation(image);
     
-    aconstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|-[lifestyleLabel]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:viewDictionary];
-    for (int i = 0; i< aconstraints.count; i++) [self.view addConstraint:aconstraints[i]];
+    [binaryImageData writeToFile:[basePath stringByAppendingPathComponent:@"myfile.jpg"] atomically:YES];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+
+        imageView.image = [imageView.image resizedImageByMagick:@"640x960#"];
+        [self.view addSubview:imageView];
+        
+        [imageView.superview sendSubviewToBack:imageView];
+
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [imageView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[imageView]|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:NSDictionaryOfVariableBindings(imageView)]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[imageView]|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:NSDictionaryOfVariableBindings(imageView)]];
+
+    });
     
-    aconstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|-[opinionLabel]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:viewDictionary];
-    for (int i = 0; i< aconstraints.count; i++) [self.view addConstraint:aconstraints[i]];
     
+}
+
+-(UIImage *) loadFromFlickr{
+    NSArray *photoArray = [FlickrFetcher uscPhotos];
+    NSURL *url = [FlickrFetcher urlForPhoto:photoArray[arc4random() % 50] format:FlickrPhotoFormatLarge];
+    
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    return [UIImage imageWithData:data];
 }
 
 - (void)didReceiveMemoryWarning

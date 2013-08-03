@@ -58,6 +58,8 @@
 		BF3E6823175CD61100C466D6 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = BF3E6817175CD61100C466D6 /* LICENSE */; };
 		BF3E6824175CD61100C466D6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = BF3E6818175CD61100C466D6 /* README.md */; };
 		BF3FD00C173E26FB0052BD02 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF3FD00B173E26FB0052BD02 /* CoreData.framework */; };
+		BF44AEF117AAE03500DE5C22 /* IMG_0096.JPG in Resources */ = {isa = PBXBuildFile; fileRef = BF44AEF017AAE03500DE5C22 /* IMG_0096.JPG */; };
+		BF44AEF417AAED0500DE5C22 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = BF44AEF317AAED0500DE5C22 /* UIImage+Resize.m */; };
 		BF59BB261760DA29007341B7 /* Story.m in Sources */ = {isa = PBXBuildFile; fileRef = BF59BB251760DA29007341B7 /* Story.m */; };
 		BF661E4B1735CC680059DFCF /* Sports@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BF661E4A1735CC680059DFCF /* Sports@2x.png */; };
 		BF661E4F1735F1A80059DFCF /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF661E4E1735F1A80059DFCF /* Social.framework */; };
@@ -101,6 +103,7 @@
 		BFD87E7517336FA10022B889 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = BFD87E7417336FA10022B889 /* icon.png */; };
 		BFD9E81F17253C4000D81A94 /* LifestyleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BFD9E81D17253C4000D81A94 /* LifestyleViewController.xib */; };
 		BFD9E8211725412600D81A94 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFD9E8201725412600D81A94 /* QuartzCore.framework */; };
+		BFDB8FCF17ABBF97000CF13F /* FlickrFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BFDB8FCE17ABBF97000CF13F /* FlickrFetcher.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -192,6 +195,9 @@
 		BF3E6817175CD61100C466D6 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		BF3E6818175CD61100C466D6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		BF3FD00B173E26FB0052BD02 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		BF44AEF017AAE03500DE5C22 /* IMG_0096.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_0096.JPG; sourceTree = "<group>"; };
+		BF44AEF217AAED0500DE5C22 /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
+		BF44AEF317AAED0500DE5C22 /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
 		BF598DB41744D6A60004C006 /* Daily Trojan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Daily Trojan.entitlements"; sourceTree = "<group>"; };
 		BF59BB241760DA29007341B7 /* Story.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Story.h; sourceTree = "<group>"; };
 		BF59BB251760DA29007341B7 /* Story.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Story.m; sourceTree = "<group>"; };
@@ -260,6 +266,9 @@
 		BFD87E7417336FA10022B889 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		BFD9E81D17253C4000D81A94 /* LifestyleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LifestyleViewController.xib; path = Classes/LifestyleViewController.xib; sourceTree = "<group>"; };
 		BFD9E8201725412600D81A94 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		BFDB8FCC17ABBF97000CF13F /* FlickrAPIKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrAPIKey.h; sourceTree = "<group>"; };
+		BFDB8FCD17ABBF97000CF13F /* FlickrFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrFetcher.h; sourceTree = "<group>"; };
+		BFDB8FCE17ABBF97000CF13F /* FlickrFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrFetcher.m; sourceTree = "<group>"; };
 		BFFE03FF17786E33008E1969 /* BottomofTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BottomofTableView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -317,12 +326,14 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				BF44AEF017AAE03500DE5C22 /* IMG_0096.JPG */,
 				BF02162517A7DD280087F151 /* TagRankingOperation.h */,
 				BF02162617A7DD280087F151 /* TagRankingOperation.m */,
 				BF02162917A7F8120087F151 /* HTMLOperation.h */,
 				BF02162A17A7F8120087F151 /* HTMLOperation.m */,
 				BFA35625176490EE00BDEEB6 /* stopwords.plist */,
 				BF598DB41744D6A60004C006 /* Daily Trojan.entitlements */,
+				BFDB8FD017ABBF9B000CF13F /* Flickr Fetcher */,
 				BF3E6801175CD61100C466D6 /* AFNetworking */,
 				BFCB06641725D35C002DD34A /* IIWrap */,
 				BFA306C0174EE1510055A89A /* iPhone View Controllers */,
@@ -496,6 +507,8 @@
 		BFA306C0174EE1510055A89A /* iPhone View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				BF44AEF217AAED0500DE5C22 /* UIImage+Resize.h */,
+				BF44AEF317AAED0500DE5C22 /* UIImage+Resize.m */,
 				BF9EE7DF1774BF2C00F55BE3 /* UIImage+ImageEffects.h */,
 				BF9EE7E01774BF2C00F55BE3 /* UIImage+ImageEffects.m */,
 				35AFE33912EE44FB00ECDFF2 /* WebViewController.h */,
@@ -574,6 +587,16 @@
 			name = Graphics;
 			sourceTree = "<group>";
 		};
+		BFDB8FD017ABBF9B000CF13F /* Flickr Fetcher */ = {
+			isa = PBXGroup;
+			children = (
+				BFDB8FCC17ABBF97000CF13F /* FlickrAPIKey.h */,
+				BFDB8FCD17ABBF97000CF13F /* FlickrFetcher.h */,
+				BFDB8FCE17ABBF97000CF13F /* FlickrFetcher.m */,
+			);
+			name = "Flickr Fetcher";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -641,6 +664,7 @@
 				28F335F11007B36200424DE2 /* RootViewController.xib in Resources */,
 				35AFE33D12EE44FB00ECDFF2 /* WebViewController.xib in Resources */,
 				BFD4B2C317908F41002E9D32 /* iPhone5@2x.jpg in Resources */,
+				BF44AEF117AAE03500DE5C22 /* IMG_0096.JPG in Resources */,
 				BF3D5C491722A1F5000970FC /* MainWindow-iPad.xib in Resources */,
 				BFB21AE4172374AB006EC547 /* NewsViewController.xib in Resources */,
 				BFD9E81F17253C4000D81A94 /* LifestyleViewController.xib in Resources */,
@@ -681,6 +705,7 @@
 				BFC0DA6D17994D6900A0FD14 /* FirstPageViewController.m in Sources */,
 				BF35A8F2177CD03D00DD0803 /* Cell.m in Sources */,
 				BF9EE7E11774C01900F55BE3 /* UIImage+ImageEffects.m in Sources */,
+				BFDB8FCF17ABBF97000CF13F /* FlickrFetcher.m in Sources */,
 				BF8F5BC51758A7820046EA50 /* MBProgressHUD.m in Sources */,
 				BFA306BE174EE04B0055A89A /* NSDate+InternetDateTime.m in Sources */,
 				BFCB06651725D451002DD34A /* IIWrapController.m in Sources */,
@@ -726,6 +751,7 @@
 				BF02162717A7DD280087F151 /* TagRankingOperation.m in Sources */,
 				BF3E6821175CD61100C466D6 /* UIImageView+AFNetworking.m in Sources */,
 				BF59BB261760DA29007341B7 /* Story.m in Sources */,
+				BF44AEF417AAED0500DE5C22 /* UIImage+Resize.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
