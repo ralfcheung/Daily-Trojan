@@ -145,7 +145,7 @@
     
     
 }
-
+ 
 -(UIImage *) loadFromFlickr{
     NSArray *photoArray = [FlickrFetcher uscPhotos];
     NSURL *url = [FlickrFetcher urlForPhoto:photoArray[arc4random() % 50] format:FlickrPhotoFormatLarge];
