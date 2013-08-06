@@ -11,26 +11,39 @@
 @implementation Cell
 @synthesize category;
 @synthesize imageView;
+@synthesize dateLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        CGSize size = self.contentView.frame.size;
         category = [[UILabel alloc] init];
         [category setTranslatesAutoresizingMaskIntoConstraints:NO];
         self.mainLabel = [[UILabel alloc] init];
         [self.mainLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-        self.mainLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15];
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+            self.mainLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25];
+        else
+            self.mainLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15];
         self.mainLabel.lineBreakMode = NSTextAlignmentJustified;
         self.mainLabel.backgroundColor = [UIColor clearColor];
         self.mainLabel.numberOfLines = 0;
-        category.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
-//        [self.mainLabel setFont:[UIFont boldSystemFontOfSize:24.0]];
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+            category.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+        else
+            category.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
         [self.mainLabel setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
         [category setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
         [self.contentView addSubview:category];
         [self.contentView addSubview:self.mainLabel];
+        dateLabel = [[UILabel alloc] init];
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+            dateLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16];
+        else
+            dateLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
+        [dateLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.contentView addSubview:dateLabel];
+        
         imageView = [[UIImageView alloc] init];
         self.imageView.contentMode = UIViewContentModeScaleAspectFit;
         [self.contentView addSubview:imageView];
@@ -59,6 +72,19 @@
                                                         multiplier:1.0f
                                                           constant:-10]];
     
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:dateLabel
+                                                         attribute:NSLayoutAttributeLeft
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeLeft
+                                                        multiplier:1.0f constant:70]];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:dateLabel
+                                                         attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeBottom
+                                                        multiplier:1.0f constant:-10]];
         
         [self addConstraint:[NSLayoutConstraint constraintWithItem:category
                                                          attribute:NSLayoutAttributeLeft

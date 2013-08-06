@@ -31,6 +31,7 @@
 @property (nonatomic, retain) CIContext *context;
 @property (nonatomic, retain) IBOutlet UITextView *captions;
 @property (nonatomic, retain) IBOutlet UITextView *titleText;
+@property (nonatomic, retain) IBOutlet UITextView *authorTextView;
 @property (nonatomic, retain) IBOutlet UIImageView* backgroundImage;
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSMutableString *author;
@@ -61,6 +62,9 @@
 @synthesize av;
 @synthesize operationQueue;
 @synthesize layoutManager;
+@synthesize authorTextView;
+
+
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner
 {
@@ -241,11 +245,14 @@
 
     [self downloadHTMLFileAndParseIt];
     
-    TagRankingOperation *taggingOperation = [[TagRankingOperation alloc] init];
-    taggingOperation.text = content;
-    taggingOperation.delegate = self;
-    [operationQueue addOperation:taggingOperation];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
 
+        TagRankingOperation *taggingOperation = [[TagRankingOperation alloc] init];
+        taggingOperation.text = content;
+        taggingOperation.delegate = self;
+        [operationQueue addOperation:taggingOperation];
+    }
+    
     //For Facebook style description, uncheck Clip Subviews
     dispatch_async(dispatch_get_main_queue(), ^{
         UIScrollView *scrollText;
@@ -254,35 +261,32 @@
         
         
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-            UIFontDescriptor *fontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle: UIFontTextStyleHeadline];
-            UIFontDescriptor *titleFontDescriptor = [fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
-            
-            UIFontDescriptor *helveticaNeueFamily = [UIFontDescriptor fontDescriptorWithFontAttributes: @{ UIFontDescriptorFamilyAttribute: @"HelveticaNeue"}];
-        NSArray *matches = [helveticaNeueFamily matchingFontDescriptorsWithMandatoryKeys:nil];
             UIFont *titleFont;
-
+            UIFontDescriptor *fontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle: UIFontTextStyleHeadline];
+            
+            UIFontDescriptor *helveticaNeueFamily =
+            [UIFontDescriptor fontDescriptorWithFontAttributes: @{
+                                                                  UIFontDescriptorFamilyAttribute: @"Helvetica Neue"
+                                                                  }];
+            NSArray *matches =
+            [helveticaNeueFamily matchingFontDescriptorsWithMandatoryKeys: nil];
+            
             for (UIFontDescriptor *desc in matches) {
-                if([desc.postscriptName isEqualToString:@"HelveticaNeue-Light"]){
-                    titleFont = [UIFont fontWithDescriptor:desc size:0.0];
+                if ([desc.postscriptName isEqualToString:@"HelveticaNeue-Light"]) {
+                    titleFont = [UIFont fontWithDescriptor: desc size:30.0];
+                    NSLog(@"%@", desc.postscriptName);
+                    
                 }
             }
             
-            UIFontDescriptor *boldFontDescriptor =
-            [fontDescriptor fontDescriptorWithSymbolicTraits:
-             UIFontDescriptorTraitUIOptimized];
-            titleFont = [UIFont fontWithDescriptor: boldFontDescriptor size: 30.0];
-//HelveticaNeue-Light, UIFontDescriptorNameAttribute
-//        NSLog(@"%@", matches);
             
-            
-            //        NSDictionary *titleDic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline1], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
+//        NSDictionary *titleDic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline1], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
             
             NSDictionary *titleDic = [NSDictionary dictionaryWithObjectsAndKeys:titleFont, NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
             
             NSDictionary *nameDic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
             NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleBody], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
             
-            NSLog(@"%@", entry.author);
             [textStorage beginEditing];
             [textStorage setAttributedString:[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", entry.articleTitle] attributes:titleDic]];
             [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:entry.author attributes:nameDic]];
@@ -292,11 +296,9 @@
             [textView sizeToFit];
             [scrollView sizeToFit];
         }else{
-//        CGSize frameSize = [textView.text sizeWithFont:textView.textStorage.length];
-//        NSLog(@"%f", frameSize.height);
-            textView.text = [NSString stringWithFormat:@"%@%@", author, entry.story.content];
+            textView.text = [NSString stringWithFormat:@"%@%@",entry.author, entry.story.content];
             titleText.text = entry.articleTitle;
-
+            authorTextView.text = entry.author;
         }
 
         
@@ -326,7 +328,7 @@
         visible = YES;
         NSLog(@"%f", textView.contentSize.height);
         if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
-       [self TFHppleFinishLoading];
+            [self TFHppleFinishLoading];
         
     });
 
@@ -336,7 +338,6 @@
 
     
     
-    NSLog(@"%f", [layoutManager usedRectForTextContainer:textView.textContainer].size.height);
     CGFloat titleHeight = titleText.contentSize.height;
     CGFloat textHeight = textView.contentSize.height;
     
@@ -348,22 +349,23 @@
     CGRect frame = textView.frame;
     frame.size = textView.contentSize;
     textView.frame = frame;
+    
+    
     UIView *view = [[UIView alloc] initWithFrame:textView.frame];
     UIView *titleView = [UIView new];
     titleView.frame = titleText.frame;
     
     [self.view addSubview:view];
     [self.view addSubview:titleView];
-    NSDictionary *viewsDictionary;
-
-    viewsDictionary = NSDictionaryOfVariableBindings(scrollView, textView, titleText, titleView, view);
+    
+    
+    NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(scrollView, textView, titleText, titleView, view);
     
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[textView(==scrollView)]|" options:0 metrics: 0 views:viewsDictionary]];
-  
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[titleText(==scrollView)]|" options:0 metrics:0 views:viewsDictionary]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-280-[titleText(==titleView)]-[textView(==view)]|" options:0 metrics: 0 views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-280-[titleText(==titleView)][textView(==view)]|" options:0 metrics: 0 views:viewsDictionary]];
     
     
 }
@@ -414,9 +416,10 @@
 -(void) shareButton:(id)sender{
     
     
-    NSArray *array = [NSArray arrayWithObjects:titleText.text, textView.text, nil];
-    UIActivityViewController *avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
-    [self presentViewController:avc animated:YES completion:nil];
+    NSArray *array = [NSArray arrayWithObjects:titleText.text, nil];
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
+    activityVC.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll]; //or whichever you don't need
+    [self presentViewController:activityVC animated:YES completion:nil];
     
 }
 
@@ -425,7 +428,7 @@
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("image downloader", NULL);
     dispatch_async(downloadQueue, ^{
-        [backgroundImage setContentMode:UIViewContentModeScaleToFill];
+        [backgroundImage setContentMode:UIViewContentModeScaleAspectFill];
         if(!imageUrl){
             _image = [UIImage imageNamed:@"iPhone5.jpg"];
         }else{
@@ -626,6 +629,7 @@
         titleText.layer.shadowOpacity = 1.0f;
         titleText.layer.shadowRadius = 1.0f;
         [titleText setTranslatesAutoresizingMaskIntoConstraints:NO];
+        
         textView = [[UITextView alloc] init];
         [textView setTranslatesAutoresizingMaskIntoConstraints:NO];
         textView.editable = NO;
@@ -634,6 +638,7 @@
         textView.alpha = 0.8;
         textView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
         textView.textColor = [UIColor blackColor];
+            
         
         [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
         [scrollView addSubview:titleText];
@@ -651,6 +656,7 @@
                                                                 toItem:self.view
                                                              attribute:NSLayoutAttributeWidth
                                                             multiplier:1.0f constant:0]];
+
     }
     
 

@@ -39,9 +39,10 @@
 //    UIColor *color = [[UITableViewHeaderFooterView appearance] tintColor];
     
 //    [[self tableView] setBackgroundColor: [UIColor colorWithRed:120/255.0f green:21/255.0f blue:27/255.0f alpha:1.0f]];
-    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
         
         [[UITableViewHeaderFooterView appearance] setTintColor:[UIColor colorWithRed:250/255.0f green:250/255.0f blue:250/255.0f alpha:1.0f]];
+    }
     //    [[UITableViewCell appearance] setTintColor: [UIColor blueColor]];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -194,8 +195,9 @@
     cell.detailTextLabel.textColor =  [UIColor colorWithRed:150/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
     cell.textLabel.backgroundColor = [UIColor clearColor];
     cell.detailTextLabel.backgroundColor = [UIColor clearColor];
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
         cell.detailTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
+    }
     //    cell.selectionStyle = UITableViewCellSelectionStyleGray;
 //    cell.textLabel.textColor = [UIColor whiteColor];
     
@@ -311,11 +313,12 @@
  }
  */
 
+
+
+
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"rootviewcontroller");
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     

@@ -222,17 +222,10 @@
 
     CGRect frame = self.tableView.bounds;
     frame.origin.y = -frame.size.height;
-    UIView* bgView = [[UIView alloc] initWithFrame:frame];
+    UIView* bgView = [[UIView alloc] init];
     bgView.backgroundColor = bgRefreshColor;
-    [self.tableView insertSubview:bgView atIndex:0];
     
-    
-    
-    //    NSLog(@"view did load");
-    //    NSLog(@"%@", _managedObjectContext);
-    //    _navBar = [[UINavigationBarWithoutGradient alloc] init];
-    //    _navBar.barStyle =
-    //    _navBar.barTintColor = [UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
+
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         
         self.navigationItem.leftBarButtonItem = [UIBarButtonItem barItemWithImage:[UIImage imageNamed:@"menu.png"] target:self.viewDeckController action:@selector(toggleLeftView)];
@@ -241,7 +234,7 @@
         self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
         [[UINavigationBar appearance] setTitleTextAttributes:
          [NSDictionary dictionaryWithObjectsAndKeys: [UIColor whiteColor], UITextAttributeTextColor, [UIFont fontWithName:@"HelveticaNeue-Light" size:16], UITextAttributeFont,nil]];
-        //    [self.navigationController setNavigationBarHidden:YES];
+//    [self.navigationController setNavigationBarHidden:YES];
         
 //        [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
         
@@ -295,7 +288,6 @@
     
     if(![self.title isEqualToString:@"Home"]){
         fetchRequest = [self sortCD];
-        
     }else{
         fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"articleDate" ascending:NO];
@@ -306,7 +298,7 @@
 
     
     _allEntries = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-    //    NSLog(@"all entries: %i", [Entries count]);
+    NSLog(@"all entries: %i", [_allEntries count]);
     
     
     
@@ -448,19 +440,40 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    //    [self layoutAnimated:NO];
-    
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    
+    NSInteger currentOffset = self.tableView.contentOffset.y;
+    NSInteger maximumOffset = self.tableView.contentSize.height - self.tableView.frame.size.height;
+    
+    if (maximumOffset - currentOffset <= -20) {
+        [self refresh:[NSString stringWithFormat:@"http://dailytrojan.com/feed/rss/?paged=%i", _allEntries.count / 50 + 2 ]];
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"articleDate" ascending:NO];
+        NSArray * descriptors = [NSArray arrayWithObject:sortDescriptor];
+        fetchRequest.sortDescriptors = descriptors;
+        
+        if(![self.title isEqualToString:@"Home"]){
+            fetchRequest = [self sortCD];
+            
+        }
+        
+        _allEntries = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
+        [self.tableView reloadData];
+    }
+        //bug: when it's in one of the sections page, it fails to go beyond 2, coz _all entries is almost always < 50
+}
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-    /*
+/*
     
     
     if(indexPath.row == [_allEntries count] - 1){
         NSLog(@"getting new entries");
 //        [self refresh:[NSString stringWithFormat:@"http://dailytrojan.com/feed/rss/?paged=%i", _allEntries.count / 50 + 2 ]];
-        //bug: when it's in one of the sections page, it fails to go beyond 2, coz _all entries is almost always < 50
+//bug: when it's in one of the sections page, it fails to go beyond 2, coz _all entries is almost always < 50
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         fetchRequest.entity = [NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"articleDate" ascending:NO];
@@ -532,7 +545,6 @@
     Cell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[Cell alloc] init];
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
     }
     
     Entry *entry;
@@ -565,11 +577,8 @@
         }
         cell.mainLabel.text = entry.articleTitle;
         cell.category.text = entry.category;
-//        cell.textLabel.text = entry.articleTitle;
+        cell.dateLabel.text = articleDateString;
         
-//        cell.detailTextLabel.frame = CGRectMake(0, -10, cell.detailTextLabel.frame.size.width, cell.detailTextLabel.frame.size.height);
-//        NSLog(@"%f %f\n", cell.detailTextLabel.frame.origin.x, cell.detailTextLabel.frame.origin.y);
-//        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", articleDateString];
         UILongPressGestureRecognizer* sgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                           action:@selector (longPress:)];
         cell.isAccessibilityElement = YES;
@@ -581,11 +590,6 @@
         }
         else cell.backgroundColor = [UIColor clearColor];
         
-//        cell.textLabel.numberOfLines = 2;
-//        cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
-//        cell.textLabel.lineBreakMode = NSTextAlignmentJustified;
-//        cell.detailTextLabel.backgroundColor = [UIColor clearColor];
-//        cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
         [cell addGestureRecognizer:sgr];
         if([entry.category isEqualToString:@"News"]){
             cell.imageView.image = [UIImage imageNamed:@"NewsIcon.jpg"];

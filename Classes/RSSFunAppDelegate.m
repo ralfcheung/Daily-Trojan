@@ -65,13 +65,7 @@
     
 //    self.centerController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
     self.centerController = [[UINavigationController alloc] initWithRootViewController:self.firstPageController];
-    self.centerController.navigationController.navigationBar.translucent = YES; // Setting this slides the view up, underneath the nav bar (otherwise it'll appear black)
-    const float colorMask[6] = {222, 255, 222, 255, 222, 255};
-    UIImage *img = [[UIImage alloc] init];
-    UIImage *maskedImage = [UIImage imageWithCGImage: CGImageCreateWithMaskingColors(img.CGImage, colorMask)];
-    
-    [self.centerController.navigationController.navigationBar setBackgroundImage:maskedImage forBarMetrics:UIBarMetricsDefault];
-    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
+        [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
     
     IIViewDeckController *deckController = [[IIViewDeckController alloc] initWithCenterViewController:self.centerController leftViewController:leftVC];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
