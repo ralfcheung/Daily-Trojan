@@ -377,7 +377,7 @@
         NSArray *items = [channel elementsForName:@"item"];
         for (GDataXMLElement *item in items) {
 //            NSLog(@"Category: %@\n", [item valueForChild:@"category"]);
-            
+             
             NSString *articleTitle = [item valueForChild:@"title"];
 //            NSLog(@"Article Title: %@\n", articleTitle);
             NSString *articleAuthor = [item valueForChild:@"dc:creator"];
