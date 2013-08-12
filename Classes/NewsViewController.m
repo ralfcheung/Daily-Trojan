@@ -15,6 +15,7 @@
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIImage+Resize.h"
+#import "Reachability.h"
 
 #define EMPTYVIEW 300
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
@@ -86,42 +87,6 @@
 }
 
 
--(CGSize)imageSizeAfterAspectFit:(UIImageView*)imgview{
-    
-    
-    float newwidth;
-    float newheight;
-    
-    UIImage *image=imgview.image;
-    
-    if (image.size.height>=image.size.width){
-        newheight=imgview.frame.size.height;
-        newwidth=(image.size.width/image.size.height)*newheight;
-        
-        if(newwidth>imgview.frame.size.width){
-            float diff=imgview.frame.size.width-newwidth;
-            newheight=newheight+diff/newheight*newheight;
-            newwidth=imgview.frame.size.width;
-        }
-        
-    }
-    else{
-        newwidth=imgview.frame.size.width;
-        newheight=(image.size.height/image.size.width)*newwidth;
-        
-        if(newheight>imgview.frame.size.height){
-            float diff=imgview.frame.size.height-newheight;
-            newwidth=newwidth+diff/newwidth*newwidth;
-            newheight=imgview.frame.size.height;
-        }
-    }
-    
-    NSLog(@"image after aspect fit: width=%f height=%f",newwidth,newheight);
-    
-    
-    return CGSizeMake(newwidth, newheight);
-    
-}
 
 
 -(id) initWithLink:(NSString *)link{
@@ -148,7 +113,7 @@
     
     // Iterate recursively through all children
     author = [NSMutableString new];
-
+    
     for (TFHppleElement *child in [element children]){
         if([[element tagName] isEqualToString:@"span"]){
             NSString *authorSt = [self getStringForTFHppleElement:child];
@@ -160,7 +125,6 @@
             }
             [author appendFormat:@"\n\n"];
             entry.author = [author copy];
-            NSLog(@"%@", author);
         }else if([[element tagName] isEqualToString:@"h1"]){
             title = [self getStringForTFHppleElement: child];
             if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
@@ -178,7 +142,7 @@
         }
     }
     
-
+    
     // Hpple creates a <text> node when it parses texts
     if ([element.tagName isEqualToString:@"text"]) [resultString appendString:element.content];
     
@@ -189,6 +153,8 @@
 
 
 -(void) downloadHTMLFileAndParseIt{
+    
+    
     NSData *tutorialsHtmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:entry.articleURL]];
     
     if(tutorialsHtmlData){
@@ -201,18 +167,34 @@
         content = [[NSString alloc] init];
         for (TFHppleElement *element in tutorialsNodes) {
             content = [content stringByAppendingString:[self getStringForTFHppleElement: element]];
-            
         }
         
-        
+        if(content == nil){
+                @try {
+                    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Today's Entry Complete"
+                                                                      message:@"Press OK to submit your data!" delegate:self cancelButtonTitle: @"OK"
+                                                            otherButtonTitles: nil];
+                    [message show];
+                    
+                }
+                @catch (NSException *exception) {
+                    NSLog(@"%@", exception);
+                }
+                @finally {
+                    [self.navigationController popViewControllerAnimated:YES];
+                    
+                }
+
+        }
         NSString *captionString;
         
         tutorialsXpathQueryString = @"//p[@class='wp-caption-text']";
         tutorialsNodes = [tutorialsParser searchWithXPathQuery:tutorialsXpathQueryString];
         if(tutorialsNodes)
             captionString = [self getStringForTFHppleElement:[tutorialsNodes lastObject]];
-        
-        entry.story = [Story storyinManagedObjectContext:_managedObjectContext storyContent:content picture:nil caption:captionString];
+        if (_managedObjectContext) {
+            entry.story = [Story storyinManagedObjectContext:_managedObjectContext storyContent:content picture:nil caption:captionString];
+        }
         
         tutorialsXpathQueryString = @"//a";
         tutorialsNodes = [tutorialsParser searchWithXPathQuery:tutorialsXpathQueryString];
@@ -235,18 +217,16 @@
         //pop a UIAlert
     }
     
-
 }
 
 
 -(void) loadText{
     
     
-
     [self downloadHTMLFileAndParseIt];
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
-
+        
         TagRankingOperation *taggingOperation = [[TagRankingOperation alloc] init];
         taggingOperation.text = content;
         taggingOperation.delegate = self;
@@ -257,12 +237,10 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         UIScrollView *scrollText;
         [scrollText addSubview:textView];
-        textView.textColor = [UIColor whiteColor];
         
         
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
             UIFont *titleFont;
-            UIFontDescriptor *fontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle: UIFontTextStyleHeadline];
             
             UIFontDescriptor *helveticaNeueFamily =
             [UIFontDescriptor fontDescriptorWithFontAttributes: @{
@@ -274,8 +252,7 @@
             for (UIFontDescriptor *desc in matches) {
                 if ([desc.postscriptName isEqualToString:@"HelveticaNeue-Light"]) {
                     titleFont = [UIFont fontWithDescriptor: desc size:30.0];
-                    NSLog(@"%@", desc.postscriptName);
-                    
+                    break;
                 }
             }
             
@@ -293,14 +270,14 @@
             [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:entry.story.content attributes:dict]];
             [textStorage endEditing];
             
-            [textView sizeToFit];
-            [scrollView sizeToFit];
+            //            [textView sizeToFit];
+            //            [scrollView sizeToFit];
         }else{
             textView.text = [NSString stringWithFormat:@"%@%@",entry.author, entry.story.content];
             titleText.text = entry.articleTitle;
             authorTextView.text = entry.author;
         }
-
+        
         
         if(entry.story.captions){
             captions.text = entry.story.captions;
@@ -310,9 +287,9 @@
             captions.editable = NO;
             captions.userInteractionEnabled = YES;
             [captions setScrollEnabled:YES];
-//            [_captions setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
+            //            [_captions setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
             if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
-//                if([_captions respondsToSelector:@selector(setFont:)])
+                //                if([_captions respondsToSelector:@selector(setFont:)])
                 [captions setFont:[UIFont preferredFontForTextStyle:UIFontTextStyleCaption1]];
             captions.isAccessibilityElement = YES;
             captions.accessibilityLabel = @"Captions";
@@ -321,25 +298,27 @@
         
         entry.read = [NSNumber numberWithInt:1];
         NSError *error;
-        [_managedObjectContext save:&error];
+        if (_managedObjectContext) {
+            [_managedObjectContext save:&error];
+        }
         if(error) NSLog(@"%@", [error description]);
         
-
+        
         visible = YES;
-        NSLog(@"%f", textView.contentSize.height);
         if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
             [self TFHppleFinishLoading];
         
     });
-
+    
 }
 
 -(void) TFHppleFinishLoading{
-
+    
     
     
     CGFloat titleHeight = titleText.contentSize.height;
     CGFloat textHeight = textView.contentSize.height;
+    NSLog(@"%f", titleHeight);
     
     CGRect titleFrame = titleText.frame;
     titleFrame.size.height = titleHeight;
@@ -370,7 +349,18 @@
     
 }
 
+
+-(BOOL) checkConnection{
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus internetStatus = [reachability currentReachabilityStatus];
+    if (internetStatus == NotReachable) {
+        return NO;
+    }
+    return YES;
+}
+
 - (void)loadDetails {
+    
     
     [self loadText];
     
@@ -391,24 +381,24 @@
                 topGradient.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 40);
             }
             if(sizeResult.height == 1136){
-//                NSLog(@"iPhone 5 Resolution");
+                //                NSLog(@"iPhone 5 Resolution");
             }
         } else {
-//            NSLog(@"iPhone Standard Resolution");
+            //            NSLog(@"iPhone Standard Resolution");
         }
     }
-//    gradient.frame = CGRectMake(0, ([UIScreen mainScreen].bounds.size.height * 5 / 6) /2 , [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height / 6);
+    //    gradient.frame = CGRectMake(0, ([UIScreen mainScreen].bounds.size.height * 5 / 6) /2 , [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height / 6);
     gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor clearColor] CGColor], (id)[[UIColor blackColor] CGColor], nil];
     topGradient.colors = [NSArray arrayWithObjects:(id)[[UIColor blackColor] CGColor], (id)[[UIColor clearColor] CGColor], nil];
-//    [self.view.layer insertSublayer:gradient atIndex:0];
+    //    [self.view.layer insertSublayer:gradient atIndex:0];
     [self.view.layer insertSublayer:topGradient below:textView.layer];
     [self.view.layer insertSublayer:gradient below:textView.layer];
     
     
     [self generateImage];
     
-//    NSData* data = [content dataUsingEncoding:NSUTF8StringEncoding];
-//    content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    //    NSData* data = [content dataUsingEncoding:NSUTF8StringEncoding];
+    //    content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
 }
 
@@ -438,7 +428,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             backgroundImage.image = [_image applyBlurWithRadius:8 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
             backgroundImage.image = [backgroundImage.image resizedImageByMagick:@"640x1136#"];
-
+            
             [backgroundImage setClipsToBounds:YES];
             [backgroundImage.superview sendSubviewToBack:backgroundImage];
             
@@ -506,34 +496,35 @@
     swipe.minimumNumberOfTouches = 2;
     
     
-    //    self.view.backgroundColor = [UIColor blackColor];
-    //    [self.navigationController setValue:[[UINavigationBarTransparent alloc] init] forKey:@"navigationBar"];
     
-    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+        //    self.view.backgroundColor = [UIColor blackColor];
+        //    [self.navigationController setValue:[[UINavigationBarTransparent alloc] init] forKey:@"navigationBar"];
+        
+        //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+        
+        operationQueue = [[NSOperationQueue alloc] init];
+        
+        [self initializeViews];
+        
+        UIBarButtonItem *loadingView = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareButton:)];
+        UIBarButtonItem *speech = [[UIBarButtonItem alloc] initWithTitle:@"Speech" style:UIBarButtonItemStylePlain target:self action:@selector(speak:)];
+        
+        [self.navigationItem setRightBarButtonItem:loadingView];
+        
+        
+        _HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+        [self.navigationController.view addSubview:_HUD];
+        _HUD.delegate = self;
+        _HUD.labelText = @"Loading...";
+        [_HUD showWhileExecuting:@selector(loadDetails)
+                        onTarget:self
+                      withObject:nil
+                        animated:YES];
+        
+        av = [[AVSpeechSynthesizer alloc]init];
+        av.delegate = self;
     
-    operationQueue = [[NSOperationQueue alloc] init];
-
-    [self initializeViews];
     
-    UIBarButtonItem *loadingView = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareButton:)];
-    UIBarButtonItem *speech = [[UIBarButtonItem alloc] initWithTitle:@"Speech" style:UIBarButtonItemStylePlain target:self action:@selector(speak:)];
-    
-    [self.navigationItem setRightBarButtonItem:loadingView];
-    
-
-    _HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-    [self.navigationController.view addSubview:_HUD];
-    _HUD.delegate = self;
-    _HUD.labelText = @"Loading...";
-    [_HUD showWhileExecuting:@selector(loadDetails)
-                    onTarget:self
-                  withObject:nil
-                    animated:YES];
-    
-    av = [[AVSpeechSynthesizer alloc]init];
-    av.delegate = self;
-    
-
 }
 
 
@@ -556,12 +547,12 @@
 -(void)finishedTagging:(TagRankingOperation *)tagsOps{
     
     NSDictionary *tagDic = tagsOps.tags;
-//    Tag *tag = [[Tag alloc] init];
+    //    Tag *tag = [[Tag alloc] init];
     [tagDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-//        NSLog(@"%@", (NSString*)key );
+        //        NSLog(@"%@", (NSString*)key );
         NSDictionary * wordDic = obj;
         [wordDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-//            NSLog(@"%@ %d", (NSString*)key, [obj intValue]);
+            //            NSLog(@"%@ %d", (NSString*)key, [obj intValue]);
         }];
         
     }];
@@ -577,20 +568,21 @@
     self.view.backgroundColor = [UIColor blackColor];
     [self.view addSubview:backgroundImage];
     [self.view addSubview:scrollView];
-
+    
     captions = [[UITextView alloc] init];
     [captions setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.4f]];
     [self.backgroundImage addSubview:captions];
     
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[scrollView]|" options:0 metrics:0 views:NSDictionaryOfVariableBindings(scrollView)]];
-
+    
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]|" options:0 metrics:0 views:NSDictionaryOfVariableBindings(scrollView)]];
     
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         
-        CGRect newTextViewRect = CGRectInset(self.view.frame, 8., 10.);
         
+        CGRect newTextViewRect = CGRectInset(self.view.frame, 8., 10.);
+        NSLog(@"%f %f", newTextViewRect.size.height, newTextViewRect.size.width);
         textStorage = [[NSTextStorage alloc] init];
         
         layoutManager = [[NSLayoutManager alloc] init];
@@ -603,10 +595,13 @@
         textView = [[UITextView alloc] initWithFrame:newTextViewRect textContainer:container];
         
         textView.editable = NO;
+        textView.scrollEnabled = YES;
 //        textView.scrollEnabled = NO;
         textView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-        textView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4f];
-
+        textView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7f];
+        textView.layer.cornerRadius = 10.0f;
+        textView.textColor = [UIColor whiteColor];
+        
         CGSize size = scrollView.contentSize;
         size.height = textView.contentSize.height + EMPTYVIEW;
         
@@ -616,9 +611,8 @@
         textViewFrame.size = textView.contentSize;
         textView.frame = textViewFrame;
         
-        
     }else{  //iOS 6
-
+        
         titleText = [[UITextView alloc] init];
         titleText.backgroundColor = [UIColor clearColor];
         titleText.textColor = [UIColor whiteColor];
@@ -637,8 +631,8 @@
         textView.backgroundColor = [UIColor blackColor];
         textView.alpha = 0.8;
         textView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
-        textView.textColor = [UIColor blackColor];
-            
+        textView.layer.cornerRadius = 10.0f;
+        textView.textColor = [UIColor whiteColor];
         
         [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
         [scrollView addSubview:titleText];
@@ -651,27 +645,29 @@
                                                               attribute:NSLayoutAttributeWidth
                                                              multiplier:1.0f constant:0]];
         [self.view addConstraint:[NSLayoutConstraint constraintWithItem:titleText
-                                                             attribute:NSLayoutAttributeWidth
-                                                             relatedBy:NSLayoutRelationEqual
-                                                                toItem:self.view
-                                                             attribute:NSLayoutAttributeWidth
-                                                            multiplier:1.0f constant:0]];
-
+                                                              attribute:NSLayoutAttributeWidth
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:self.view
+                                                              attribute:NSLayoutAttributeWidth
+                                                             multiplier:1.0f constant:0]];
+        titleText.scrollsToTop = NO;
+        
     }
     
-
+    textView.scrollsToTop = NO;
+    
     [scrollView addSubview:textView];
-
+    scrollView.scrollsToTop = YES;
 }
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView{
     
     CGSize size = textView.frame.size;
-//    UIGraphicsBeginImageContextWithOptions(size, NULL, 0);
-//    [textView drawViewHierarchyInRect:textView.frame];
-//    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//    newImage = [newImage applyLightEffect];
+    //    UIGraphicsBeginImageContextWithOptions(size, NULL, 0);
+    //    [textView drawViewHierarchyInRect:textView.frame];
+    //    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    //    UIGraphicsEndImageContext();
+    //    newImage = [newImage applyLightEffect];
 }
 
 -(void) bounceScrollView{
@@ -749,7 +745,6 @@
 -(void) tapMethod: (UITapGestureRecognizer*) gesture{
     
     if(visible && imageUrl){
-        
         [UIView animateWithDuration:0.1
                               delay:0
                             options:UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -794,6 +789,14 @@
     return NO;
 }
 
+-(void) viewWillAppear:(BOOL)animated{
+    //    [self.navigationController setNavigationBarHidden:NO];
+    //    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+    //
+    //        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    //        self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
+    //    }
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

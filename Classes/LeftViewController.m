@@ -43,7 +43,7 @@
         
         [[UITableViewHeaderFooterView appearance] setTintColor:[UIColor colorWithRed:250/255.0f green:250/255.0f blue:250/255.0f alpha:1.0f]];
     }
-    //    [[UITableViewCell appearance] setTintColor: [UIColor blueColor]];
+//    [[UITableViewCell appearance] setTintColor: [UIColor blueColor]];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -70,10 +70,12 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == 0) {
+    if (indexPath.section == 0)
         return 130;
-    }
     return 60;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 0;
 }
 
 

@@ -22,26 +22,28 @@
         self.mainLabel = [[UILabel alloc] init];
         [self.mainLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-            self.mainLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25];
+            self.mainLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:19];
         else
             self.mainLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15];
         self.mainLabel.lineBreakMode = NSTextAlignmentJustified;
         self.mainLabel.backgroundColor = [UIColor clearColor];
         self.mainLabel.numberOfLines = 0;
         if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-            category.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+            category.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16];
         else
             category.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
         [self.mainLabel setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
         [category setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
+        category.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:category];
         [self.contentView addSubview:self.mainLabel];
         dateLabel = [[UILabel alloc] init];
         if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-            dateLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16];
+            dateLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
         else
             dateLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
         [dateLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        dateLabel.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:dateLabel];
         
         imageView = [[UIImageView alloc] init];

@@ -9,6 +9,11 @@
 #import "FirstPageViewController.h"
 #import "UIImage+Resize.h"
 #import "FlickrFetcher.h"
+#import <QuartzCore/QuartzCore.h>
+#import "NewsViewController.h"
+
+
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @interface FirstPageViewController ()
 
@@ -16,14 +21,13 @@
 @property (nonatomic, retain) UIButton *sportsLabel;
 @property (nonatomic, retain) UIButton *lifestyleLabel;
 @property (nonatomic, retain) UIButton *opinionLabel;
-
 @end
 
 
 @implementation FirstPageViewController
 
 @synthesize newsLabel, sportsLabel, lifestyleLabel, opinionLabel;
-
+@synthesize entry;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,10 +49,12 @@
 -(void) viewWillAppear:(BOOL)animated{
     
     [self.navigationController setNavigationBarHidden:YES];
-
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+    }
 }
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -59,35 +65,27 @@
     
 
     self.view.backgroundColor = [UIColor whiteColor];
-    newsLabel = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+        newsLabel = [UIButton buttonWithType:UIButtonTypeCustom];
+    else
+        newsLabel = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     sportsLabel =  [UIButton buttonWithType:UIButtonTypeRoundedRect];
     lifestyleLabel = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     opinionLabel = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
-    [newsLabel setTitle:@"New building for Interactive Media Program holds top resources" forState:UIControlStateNormal];
+    
+    [newsLabel setTitle:entry.articleTitle forState:UIControlStateNormal];
     [sportsLabel setTitle:@"Adam Landecker collects another postseason award" forState:UIControlStateNormal];
     [lifestyleLabel setTitle:@"Neighborhood Academic Initiative continues to help students excel" forState:UIControlStateNormal];
     [opinionLabel setTitle:@"Failed to get token, error: Error Domain continues to help students " forState:UIControlStateNormal];
-    
-    
-    //    [newsLabel setContentEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-    //    [sportsLabel setContentEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-    //    [lifestyleLabel setContentEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-    //    [opinionLabel setContentEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     
     [self setLooking:newsLabel];
     [self setLooking:sportsLabel];
     [self setLooking:lifestyleLabel];
     [self setLooking:opinionLabel];
-       
-    
-    
-    [self loadPhoto];
-    
+
+        [self loadPhoto];
     [self.view addSubview:newsLabel];
-//    [self.view addSubview:sportsLabel];
-//    [self.view addSubview:lifestyleLabel];
-//    [self.view addSubview:opinionLabel];
     
     
     
@@ -104,9 +102,9 @@
 //    
 //    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-[opinionLabel]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:viewDictionary]];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-300-[newsLabel]-15-|" options:NSLayoutFormatDirectionMask metrics:nil views:viewDictionary]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-400-[newsLabel]-20-|" options:NSLayoutFormatDirectionMask metrics:nil views:viewDictionary]];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-700-[newsLabel]-|" options:NSLayoutFormatDirectionMask metrics:nil views:viewDictionary]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-700-[newsLabel]-20-|" options:NSLayoutFormatDirectionMask metrics:nil views:viewDictionary]];
 
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[newsLabel]|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:viewDictionary]];
 
@@ -118,21 +116,24 @@
     NSString *stringPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
     NSArray *filePathsArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:stringPath  error:&error];
     UIImage *ia;
-    for(int i=0;i<[filePathsArray count];i++)
-    {
+    for(int i = 0; i < [filePathsArray count]; i++){
+       
         NSString *strFilePath = [filePathsArray objectAtIndex:i];
-        
+//        NSLog(@"%@", strFilePath);
         if ([[strFilePath pathExtension] isEqualToString:@"jpg"]){
             NSString *imagePath = [[stringPath stringByAppendingFormat:@"/"] stringByAppendingFormat:strFilePath];
             NSData *data = [NSData dataWithContentsOfFile:imagePath];
             if(data){
                 ia = [UIImage imageWithData:data];
+                NSLog(@"%@", ia);
             }
         }
         
     }
+    NSLog(@"%@", ia);
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:ia];
+    
     [self.view addSubview:imageView];
     [imageView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
@@ -145,7 +146,6 @@
     dispatch_async(loaderQ, ^{
         
         UIImage *image = [self loadFromFlickr];
-        
         NSArray * paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString * basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
         NSData * binaryImageData = UIImagePNGRepresentation(image);
@@ -153,8 +153,11 @@
         [binaryImageData writeToFile:[basePath stringByAppendingPathComponent:@"myfile.jpg"] atomically:YES];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-//            imageView.image = image;
-            [self switchPhotos:imageView :image];
+            if (image)
+                imageView.image = image;
+//            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+//                imageView.image = [imageView.image resizedImageByMagick:@""]
+
             imageView.image = [imageView.image resizedImageByMagick:@"640x1136#"];
             [imageView.superview sendSubviewToBack:imageView];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -177,17 +180,39 @@
     button.titleLabel.layer.shadowOffset = CGSizeMake(0.3f, 0.3f);
     button.titleLabel.layer.shadowOpacity = 1.0f;
     button.titleLabel.layer.shadowRadius = 0.4f;
-    button.titleLabel.font = [UIFont fontWithDescriptor:[UIFontDescriptor fontDescriptorWithFontAttributes: @{ UIFontDescriptorNameAttribute: @"HelveticaNeue-Light"}] size:25];
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        button.titleLabel.font = [UIFont fontWithDescriptor:[UIFontDescriptor fontDescriptorWithFontAttributes: @{ UIFontDescriptorNameAttribute: @"HelveticaNeue-Light"}] size:40];
+    button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    button.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0);
 
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
+        button.titleLabel.font = [UIFont fontWithDescriptor:[UIFontDescriptor fontDescriptorWithFontAttributes: @{ UIFontDescriptorNameAttribute: @"HelveticaNeue-Light"}] size:25];
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+            button.titleLabel.font = [UIFont fontWithDescriptor:[UIFontDescriptor fontDescriptorWithFontAttributes: @{ UIFontDescriptorNameAttribute: @"HelveticaNeue-Light"}] size:40];
+    }else{
+        button.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:25];
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+            button.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:40];
+
+    }
+    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
+        CALayer *layer = button.layer;
+        layer.backgroundColor = [[UIColor clearColor] CGColor];
+        layer.borderColor = [[UIColor clearColor] CGColor];
+        layer.cornerRadius = 28.0f;
+        layer.borderWidth = 0.0f;
+
+    }
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     button.backgroundColor = [UIColor clearColor];
-    button.titleLabel.numberOfLines = 3;
+    button.titleLabel.numberOfLines = 0;
     button.translatesAutoresizingMaskIntoConstraints = NO;
-
+    [button addTarget:self
+               action:@selector(toNews) forControlEvents:UIControlEventTouchDown];
 }
-
+-(void) toNews{
+    NewsViewController* news = [[NewsViewController alloc] initWithEntry: entry];
+    news.managedObjectContext = nil;
+    [self.navigationController pushViewController:news animated:YES];
+}
 
 -(UIImage *) loadFromFlickr{
     NSArray *photoArray = [FlickrFetcher uscPhotos];

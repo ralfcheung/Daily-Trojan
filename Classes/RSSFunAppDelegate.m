@@ -17,6 +17,7 @@
 #import "GDataXMLElement-Extras.h"
 #import "NSDate+InternetDateTime.h"
 #import "FirstPageViewController.h"
+#import "UINavigationBarWithoutGradient.h"
 
 @implementation RSSFunAppDelegate
 
@@ -46,9 +47,6 @@
 
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
-    
-
-    
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     }
@@ -65,20 +63,23 @@
     
 //    self.centerController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
     self.centerController = [[UINavigationController alloc] initWithRootViewController:self.firstPageController];
-        [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
+    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+//        self.centerController = [[UINavigationBarWithoutGradient alloc] init];
+    
+    }
+//    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
     
     IIViewDeckController *deckController = [[IIViewDeckController alloc] initWithCenterViewController:self.centerController leftViewController:leftVC];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
     
         [deckController setLeftSize: 100];
-//        deckController.rightSize = 50;
     }else{
         [deckController setLeftSize: 400];
-//        deckController.rightSize = 800;
 
     }
+    
     [self refresh];
-
+    self.firstPageController.entry = [self setTitle];
     self.window.rootViewController = deckController;
     //    }
     //    else{
@@ -92,13 +93,22 @@
     return YES;
 }
 
+- (Entry*) setTitle{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Entry" inManagedObjectContext:_managedObjectContext]];
+    NSPredicate *ignoreRoundUp = [NSPredicate predicateWithFormat:@"SELF.articleTitle contains[c] %@ ", @"Roundup"];
+    ignoreRoundUp = [NSCompoundPredicate notPredicateWithSubpredicate:ignoreRoundUp];
+    
+    [fetchRequest setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:ignoreRoundUp, [NSPredicate predicateWithFormat:@"SELF.category contains %@", @"News"], nil]]];
+    NSArray *array = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
+   
+    return [array objectAtIndex:0];
+}
+
 - (void)refresh {
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://dailytrojan.com/feed/rss/"]];
     NSError *error;
     NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
-//    NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-//        returnData = data;
-//    }
     GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithData:returnData
                                                            options:0 error:&error];
     if (doc == nil) {
@@ -110,9 +120,6 @@
         
     }
 
-    
-    
-    
 //
 //    NSURL *url = [NSURL URLWithString:@"http://feeds2.feedburner.com/DailyTrojan-rss"];
 //    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -129,16 +136,11 @@
     NSArray *channels = [rootElement elementsForName:@"channel"];
     for (GDataXMLElement *channel in channels) {
         
-        NSString *blogTitle = [channel valueForChild:@"title"];
-//        NSLog(@"Blog Title: %@", blogTitle);
         NSArray *items = [channel elementsForName:@"item"];
         for (GDataXMLElement *item in items) {
-            //            NSLog(@"Category: %@\n", [item valueForChild:@"category"]);
             
             NSString *articleTitle = [item valueForChild:@"title"];
-            //            NSLog(@"Article Title: %@\n", articleTitle);
             NSString *articleAuthor = [item valueForChild:@"dc:creator"];
-            //            NSLog(@"Author: %@\n", articleAuthor);
             NSString *articleUrl = [item valueForChild:@"link"];
             NSString *category = [item valueForChild:@"category"];
             NSString *articleDateString = [item valueForChild:@"pubDate"];
@@ -179,6 +181,7 @@
     } else {
         NSLog(@"Unsupported root element: %@", rootElement.name);
     }
+    return newData;
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request {

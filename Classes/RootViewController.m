@@ -116,6 +116,7 @@
         if(link)
             self.feed = [link copy];
         self.title = name;
+        [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:1 green:1 blue:1 alpha:1], UITextAttributeTextColor, nil]];
         self.managedObjectContext = managedObjectContext;
         //        if ([ADBannerView instancesRespondToSelector:@selector(initWithAdType:)]) {
         //            _bannerView = [[ADBannerView alloc] initWithAdType:ADAdTypeBanner];
@@ -186,10 +187,8 @@
     NSArray *array = [NSArray arrayWithObjects:titlePredicate, categoryPredicate, authorPredicate, nil];
     NSPredicate *predicate = [NSCompoundPredicate orPredicateWithSubpredicates:array];
     [fetchRequest setPredicate:predicate];
-//    _allEntries = [[_allEntries filteredArrayUsingPredicate:predicate] mutableCopy];
     searchedEntries = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-//    searchedEntries = _allEntries;
-    
+   
     return YES;
 }
 
@@ -200,7 +199,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+//    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
+
     self.allEntries = [NSMutableArray array];
     _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];
     _searchBar.delegate = self;
@@ -212,20 +212,19 @@
     
     UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
     [refresh addTarget:self action:@selector(refreshView:) forControlEvents:UIControlEventValueChanged];
-    refresh.tintColor = [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.0f];
+//    refresh.tintColor = [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.0f];
     refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing"];
     [refresh endRefreshing];
     self.refreshControl = refresh;
     
     
-    UIColor *bgRefreshColor = [UIColor colorWithRed:100/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
-
-    CGRect frame = self.tableView.bounds;
+    CGRect frame = self.tableView.frame;
     frame.origin.y = -frame.size.height;
-    UIView* bgView = [[UIView alloc] init];
-    bgView.backgroundColor = bgRefreshColor;
-    
+    UIView* bgView = [[UIView alloc] initWithFrame:frame];
+    bgView.backgroundColor = [UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
+    [self.tableView insertSubview:bgView atIndex:0];
 
+    
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         
         self.navigationItem.leftBarButtonItem = [UIBarButtonItem barItemWithImage:[UIImage imageNamed:@"menu.png"] target:self.viewDeckController action:@selector(toggleLeftView)];
@@ -257,13 +256,7 @@
                 break;
             }
         }
-        UIView *view = [[UIView alloc] init];
-        view.backgroundColor = [UIColor blackColor];
-        UILabel *label = [[UILabel alloc] init];
-        label.text = @"Bottom";
-        label.textColor = [UIColor blackColor];
         self.tableView.tableHeaderView = _searchBar;
-        self.tableView.tableFooterView = view;
     }
     
     for (UIView *view in _searchBar.subviews){
@@ -295,19 +288,8 @@
         fetchRequest.sortDescriptors = descriptors;
 
     }
-
     
     _allEntries = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-    NSLog(@"all entries: %i", [_allEntries count]);
-    
-    
-    
-    
-    
-    //    [self setupView];
-    //    [self setup];
-    //    [self.view addSubview:_searchBar];
-    //    [self.tableView reloadData];
 }
 
 #pragma mark -
@@ -325,11 +307,11 @@
     
     if([self.title isEqualToString:@"Sports"]){
         NSArray *array = [NSArray arrayWithObjects:
-                          [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Baseball"],[NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Basketball"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Football"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Golf"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Soccer"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Tennis"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Track and Field"],  [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Volleyball"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Water Polo"], [NSPredicate predicateWithFormat:@"category = %@", self.title], nil];
+                          [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Baseball"],[NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Basketball"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Football"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Golf"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Soccer"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Tennis"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Track and Field"],  [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Volleyball"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Water Polo"], [NSPredicate predicateWithFormat:@"category beginswith[c] %@", @"Rowing"],[NSPredicate predicateWithFormat:@"category = %@", self.title], nil];
         predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
         
     }else if([self.title isEqualToString:@"News"]){
-        NSArray *array = [NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Roundup"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", self.title], nil];
+        NSArray *array = [NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Roundup"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", self.title], [NSPredicate predicateWithFormat:@"category beginswith[c] %@", @"Featured"],nil];
         
         predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
         
@@ -358,7 +340,6 @@
     }
     else entry = [_allEntries objectAtIndex:indexPath.row];
     
-//    NewsViewController* news = [[NewsViewController alloc] initWithLink: entry.articleURL];
     NewsViewController* news = [[NewsViewController alloc] initWithEntry: entry];
     news.managedObjectContext = _managedObjectContext;
     [self.navigationController pushViewController:news animated:YES];
@@ -373,15 +354,11 @@
     for (GDataXMLElement *channel in channels) {
         
         NSString *blogTitle = [channel valueForChild:@"title"];
-//        NSLog(@"Blog Title: %@", blogTitle);
         NSArray *items = [channel elementsForName:@"item"];
         for (GDataXMLElement *item in items) {
-//            NSLog(@"Category: %@\n", [item valueForChild:@"category"]);
-             
+            
             NSString *articleTitle = [item valueForChild:@"title"];
-//            NSLog(@"Article Title: %@\n", articleTitle);
             NSString *articleAuthor = [item valueForChild:@"dc:creator"];
-//            NSLog(@"Author: %@\n", articleAuthor);
             NSString *articleUrl = [item valueForChild:@"link"];
             NSString *category = [item valueForChild:@"category"];
             NSString *articleDateString = [item valueForChild:@"pubDate"];
@@ -393,7 +370,6 @@
             NSArray *result = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
             
             if(found.location == NSNotFound && ![result count]) {
-//                NSLog(@"%@", articleTitle);
                 Entry *e = [NSEntityDescription insertNewObjectForEntityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
                 e.articleTitle = articleTitle;
                 e.articleURL = articleUrl;
