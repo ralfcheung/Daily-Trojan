@@ -155,7 +155,6 @@
                 Entry *e = [NSEntityDescription insertNewObjectForEntityForName:@"Entry" inManagedObjectContext:_managedObjectContext]; 
                 e.articleTitle = articleTitle;
                 e.articleURL = articleUrl;
-                e.author = articleAuthor;
                 e.articleDate = articleDate;
                 e.category = category;
                 e.favorite = [NSNumber numberWithInt:0];

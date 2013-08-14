@@ -32,7 +32,6 @@
 @property (nonatomic, retain) CIContext *context;
 @property (nonatomic, retain) IBOutlet UITextView *captions;
 @property (nonatomic, retain) IBOutlet UITextView *titleText;
-@property (nonatomic, retain) IBOutlet UITextView *authorTextView;
 @property (nonatomic, retain) IBOutlet UIImageView* backgroundImage;
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSMutableString *author;
@@ -63,7 +62,6 @@
 @synthesize av;
 @synthesize operationQueue;
 @synthesize layoutManager;
-@synthesize authorTextView;
 
 
 
@@ -123,6 +121,7 @@
                 name = [name stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[name substringToIndex:1] capitalizedString]];
                 [author appendFormat:@"%@ ", name];
             }
+            NSLog(@"%@", author);
             [author appendFormat:@"\n\n"];
             entry.author = [author copy];
         }else if([[element tagName] isEqualToString:@"h1"]){
@@ -136,12 +135,10 @@
             NSString *st =[self getStringForTFHppleElement:child];
             st = [st stringByAppendingString:@"\n\n"];
             
-            
             [resultString appendString:[self getStringForTFHppleElement:child]];
             [resultString appendFormat:@"\n\n"];
         }
     }
-    
     
     // Hpple creates a <text> node when it parses texts
     if ([element.tagName isEqualToString:@"text"]) [resultString appendString:element.content];
@@ -169,23 +166,7 @@
             content = [content stringByAppendingString:[self getStringForTFHppleElement: element]];
         }
         
-        if(content == nil){
-                @try {
-                    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Today's Entry Complete"
-                                                                      message:@"Press OK to submit your data!" delegate:self cancelButtonTitle: @"OK"
-                                                            otherButtonTitles: nil];
-                    [message show];
-                    
-                }
-                @catch (NSException *exception) {
-                    NSLog(@"%@", exception);
-                }
-                @finally {
-                    [self.navigationController popViewControllerAnimated:YES];
-                    
-                }
-
-        }
+        
         NSString *captionString;
         
         tutorialsXpathQueryString = @"//p[@class='wp-caption-text']";
@@ -257,27 +238,38 @@
             }
             
             
-//        NSDictionary *titleDic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline1], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
+            //        NSDictionary *titleDic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline1], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
             
             NSDictionary *titleDic = [NSDictionary dictionaryWithObjectsAndKeys:titleFont, NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
             
             NSDictionary *nameDic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
             NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont preferredFontForTextStyle:UIFontTextStyleBody], NSFontAttributeName, [UIColor whiteColor], NSForegroundColorAttributeName, nil];
-            
             [textStorage beginEditing];
             [textStorage setAttributedString:[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", entry.articleTitle] attributes:titleDic]];
-            [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:entry.author attributes:nameDic]];
-            [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:entry.story.content attributes:dict]];
+            
+            if(!_managedObjectContext){
+                [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:author attributes:nameDic]];
+
+                [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:content attributes:dict]];
+            }
+            else{
+                [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:entry.author attributes:nameDic]];
+
+                [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:entry.story.content attributes:dict]];
+            }
             [textStorage endEditing];
             
-            //            [textView sizeToFit];
-            //            [scrollView sizeToFit];
+//            [textView sizeToFit];
+//            [scrollView sizeToFit];
         }else{
-            textView.text = [NSString stringWithFormat:@"%@%@",entry.author, entry.story.content];
+            if(_managedObjectContext)
+                textView.text = [NSString stringWithFormat:@"%@%@",entry.author, entry.story.content];
+            else
+                textView.text = [NSString stringWithFormat:@"%@%@", author, content];
+            
             titleText.text = entry.articleTitle;
-            authorTextView.text = entry.author;
+
         }
-        
         
         if(entry.story.captions){
             captions.text = entry.story.captions;
@@ -318,7 +310,6 @@
     
     CGFloat titleHeight = titleText.contentSize.height;
     CGFloat textHeight = textView.contentSize.height;
-    NSLog(@"%f", titleHeight);
     
     CGRect titleFrame = titleText.frame;
     titleFrame.size.height = titleHeight;
@@ -344,7 +335,7 @@
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]|" options:0 metrics: 0 views:viewsDictionary]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[textView(==scrollView)]|" options:0 metrics: 0 views:viewsDictionary]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[titleText(==scrollView)]|" options:0 metrics:0 views:viewsDictionary]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-280-[titleText(==titleView)][textView(==view)]|" options:0 metrics: 0 views:viewsDictionary]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-150-[titleText(==titleView)][textView(==view)]|" options:0 metrics: 0 views:viewsDictionary]];
     
     
 }
@@ -391,8 +382,8 @@
     gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor clearColor] CGColor], (id)[[UIColor blackColor] CGColor], nil];
     topGradient.colors = [NSArray arrayWithObjects:(id)[[UIColor blackColor] CGColor], (id)[[UIColor clearColor] CGColor], nil];
     //    [self.view.layer insertSublayer:gradient atIndex:0];
-    [self.view.layer insertSublayer:topGradient below:textView.layer];
-    [self.view.layer insertSublayer:gradient below:textView.layer];
+//    [self.view.layer insertSublayer:topGradient below:textView.layer];
+//    [self.view.layer insertSublayer:gradient below:textView.layer];
     
     
     [self generateImage];
@@ -547,12 +538,12 @@
 -(void)finishedTagging:(TagRankingOperation *)tagsOps{
     
     NSDictionary *tagDic = tagsOps.tags;
-    //    Tag *tag = [[Tag alloc] init];
+//    Tag *tag = [[Tag alloc] init];
     [tagDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        //        NSLog(@"%@", (NSString*)key );
+//        NSLog(@"%@", (NSString*)key );
         NSDictionary * wordDic = obj;
         [wordDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            //            NSLog(@"%@ %d", (NSString*)key, [obj intValue]);
+//            NSLog(@"%@ %d", (NSString*)key, [obj intValue]);
         }];
         
     }];
@@ -582,7 +573,6 @@
         
         
         CGRect newTextViewRect = CGRectInset(self.view.frame, 8., 10.);
-        NSLog(@"%f %f", newTextViewRect.size.height, newTextViewRect.size.width);
         textStorage = [[NSTextStorage alloc] init];
         
         layoutManager = [[NSLayoutManager alloc] init];
@@ -596,8 +586,7 @@
         
         textView.editable = NO;
         textView.scrollEnabled = YES;
-//        textView.scrollEnabled = NO;
-        textView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
+//        textView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
         textView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7f];
         textView.layer.cornerRadius = 10.0f;
         textView.textColor = [UIColor whiteColor];
@@ -655,7 +644,6 @@
     }
     
     textView.scrollsToTop = NO;
-    
     [scrollView addSubview:textView];
     scrollView.scrollsToTop = YES;
 }

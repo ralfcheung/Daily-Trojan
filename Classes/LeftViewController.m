@@ -33,7 +33,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.sections = [NSArray arrayWithObjects:@"News", @"Sports",@"Lifestyle",@"Opinion",nil];
+    self.sections = [NSArray arrayWithObjects:@"news", @"sports",@"lifestyle",@"opinion",nil];
     
     [self.tableView reloadData];
 //    UIColor *color = [[UITableViewHeaderFooterView appearance] tintColor];
@@ -250,7 +250,7 @@
                     break;
                 case 3:
                     cell.imageView.image = [UIImage imageNamed:@"Opinion.png"];
-                    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"read == %@ AND category == %@", [NSNumber numberWithInt:0], @"Opinion"];
+                    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"read == %@ AND category == %@", [NSNumber numberWithInt:0], @"opinion"];
                     result = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
                     if([result count] != 0)
                         cell.detailTextLabel.text = [NSString stringWithFormat:@"%i unread news", [result count]];
@@ -261,8 +261,8 @@
             }
             break;
         case 2:
-            if(indexPath.row == 0) cell.textLabel.text = @"Twitter";
-            else cell.textLabel.text = @"Facebook";
+            if(indexPath.row == 0) cell.textLabel.text = @"twitter";
+            else cell.textLabel.text = @"facebook";
             cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:18];
             break;
         default:
@@ -338,12 +338,14 @@
                 
             }
             else {
+                NSLog(@"%i %i", indexPath.row, indexPath.section);
                 RootViewController *rootViewController;
                 if(!indexPath.section){
                     rootViewController = [[RootViewController alloc] initWithLink: nil name: @"Home" managedObjectContext: _managedObjectContext];
                     
                 }else{
-//                NSLog(@"Section: %@", [self.sections objectAtIndex:indexPath.row]);
+                NSLog(@"Section: %@", [self.sections objectAtIndex:indexPath.row]);
+                    
                     rootViewController = [[RootViewController alloc] initWithLink: nil name: [self.sections objectAtIndex:indexPath.row] managedObjectContext: _managedObjectContext];
                 }
                 controller.centerController = [[UINavigationController alloc] initWithRootViewController:rootViewController];

@@ -219,9 +219,9 @@
     
     NSURL *url;
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        url =[FlickrFetcher urlForPhoto:photoArray[arc4random() % 30] format:FlickrPhotoFormatOriginal];
+        url =[FlickrFetcher urlForPhoto:photoArray[arc4random() % 12] format:FlickrPhotoFormatOriginal];
     else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        url = [FlickrFetcher urlForPhoto:photoArray[arc4random() % 30] format:FlickrPhotoFormatLarge];
+        url = [FlickrFetcher urlForPhoto:photoArray[arc4random() % 12] format:FlickrPhotoFormatLarge];
 
     NSData *data = [NSData dataWithContentsOfURL:url];
     return [UIImage imageWithData:data];

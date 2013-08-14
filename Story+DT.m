@@ -15,6 +15,8 @@
     Story *s = [NSEntityDescription insertNewObjectForEntityForName:@"Story" inManagedObjectContext:context];
     if(story)
         s.content = story;
+    else
+        s.content = [NSString stringWithFormat:@" "];
 //    s.storyPicture = picture;
     if(caption)
         s.captions = caption;

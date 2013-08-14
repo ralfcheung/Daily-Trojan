@@ -305,21 +305,21 @@
 
     NSPredicate *predicate;
     
-    if([self.title isEqualToString:@"Sports"]){
+    if([self.title isEqualToString:@"sports"]){
         NSArray *array = [NSArray arrayWithObjects:
                           [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Baseball"],[NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Basketball"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Football"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Golf"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Soccer"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Tennis"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Track and Field"],  [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Volleyball"], [NSPredicate predicateWithFormat:@"SELF.category beginswith[c] %@", @"Water Polo"], [NSPredicate predicateWithFormat:@"category beginswith[c] %@", @"Rowing"],[NSPredicate predicateWithFormat:@"category = %@", self.title], nil];
         predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
         
-    }else if([self.title isEqualToString:@"News"]){
+    }else if([self.title isEqualToString:@"news"]){
         NSArray *array = [NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Roundup"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", self.title], [NSPredicate predicateWithFormat:@"category beginswith[c] %@", @"Featured"],nil];
         
         predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
         
-    }else if([self.title isEqualToString:@"Lifestyle"]){
+    }else if([self.title isEqualToString:@"lifestyle"]){
         NSArray *array = [NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Film"] ,[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Games"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Music"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Reviews"], [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", @"Theatre"] ,[NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", self.title],  nil];
         predicate = [NSCompoundPredicate orPredicateWithSubpredicates: array];
         
-    }else if([self.title isEqualToString:@"Opinion"]){
+    }else if([self.title isEqualToString:@"opinion"]){
         
         predicate = [NSPredicate predicateWithFormat:@"SELF.category beginsWith[c] %@", self.title];
     }
@@ -373,7 +373,6 @@
                 Entry *e = [NSEntityDescription insertNewObjectForEntityForName:@"Entry" inManagedObjectContext:_managedObjectContext];
                 e.articleTitle = articleTitle;
                 e.articleURL = articleUrl;
-                e.author = articleAuthor;
                 e.articleDate = articleDate;
                 e.category = category;
                 e.favorite = NO;
@@ -569,7 +568,7 @@
         [cell addGestureRecognizer:sgr];
         if([entry.category isEqualToString:@"News"]){
             cell.imageView.image = [UIImage imageNamed:@"NewsIcon.jpg"];
-        }else if([entry.category isEqualToString:@"Sports"] || [entry.category isEqualToString:@"Football"] || [entry.category isEqualToString:@"Golf"] || [entry.category isEqualToString:@"Water Polo"] || [entry.category isEqualToString:@"Baseball"] || [entry.category isEqualToString:@"Basketball"])
+        }else if([entry.category isEqualToString:@"Sports"] || [entry.category isEqualToString:@"Football"] || [entry.category isEqualToString:@"Golf"] || [entry.category isEqualToString:@"Water Polo"] || [entry.category isEqualToString:@"Baseball"] || [entry.category isEqualToString:@"Basketball"] || [entry.category isEqualToString:@"Rowing"])
             cell.imageView.image = [UIImage imageNamed:@"SportsIcon.jpg"];
         else if([entry.category isEqualToString:@"Lifestyle"] || [entry.category isEqualToString:@"Game"] || [entry.category isEqualToString:@"Film"] || [entry.category isEqualToString:@"Reviews"] || [entry.category isEqualToString:@"Theatre"] || [entry.category isEqualToString:@"Music"])
             cell.imageView.image = [UIImage imageNamed:@"LifestyleIcon.jpg"];
