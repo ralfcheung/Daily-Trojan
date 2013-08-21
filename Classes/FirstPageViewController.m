@@ -125,12 +125,10 @@
             NSData *data = [NSData dataWithContentsOfFile:imagePath];
             if(data){
                 ia = [UIImage imageWithData:data];
-                NSLog(@"%@", ia);
             }
         }
         
     }
-    NSLog(@"%@", ia);
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:ia];
     

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <iAd/iAd.h>
+#import "Entry.h"
+
 
 typedef void (^CRefreshCompletionHandler) (BOOL didReceiveNewPosts);
 

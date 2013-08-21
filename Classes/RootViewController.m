@@ -93,10 +93,8 @@
     }
     else {
         NSMutableArray *entries = [NSMutableArray array];
-        newData = [self parseFeed:doc.rootElement entries:entries];
-        
+        return [self parseFeed:doc.rootElement entries:entries];
     }
-    
     return newData;
     
 }
@@ -105,6 +103,10 @@
     BOOL newData = [self refresh: nil];
     if (completionHandler) {
         completionHandler(newData ? YES: NO);
+
+        if (newData) {
+            [self.tableView reloadData];
+        }
     }
     
 }
@@ -233,9 +235,6 @@
         self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f];
         [[UINavigationBar appearance] setTitleTextAttributes:
          [NSDictionary dictionaryWithObjectsAndKeys: [UIColor whiteColor], UITextAttributeTextColor, [UIFont fontWithName:@"HelveticaNeue-Light" size:16], UITextAttributeFont,nil]];
-//    [self.navigationController setNavigationBarHidden:YES];
-        
-//        [[UIBarButtonItem appearance] setTintColor:[UIColor colorWithRed:133/255.0f green:5/255.0f blue:3/255.0f alpha:1.0f]];
         
         _searchBar.tintColor = [UIColor whiteColor];
         _searchBar.barTintColor = self.navigationController.navigationBar.barTintColor;
@@ -349,7 +348,7 @@
 
 - (BOOL)parseRss:(GDataXMLElement *)rootElement entries:(NSMutableArray *)entries {
     
-    BOOL newData = NO;
+    BOOL data = NO;
     NSArray *channels = [rootElement elementsForName:@"channel"];
     for (GDataXMLElement *channel in channels) {
         
@@ -376,7 +375,7 @@
                 e.articleDate = articleDate;
                 e.category = category;
                 e.favorite = NO;
-                newData = YES;
+                data = YES;
                 e.read = [NSNumber numberWithInt:0];
                 NSError *error;
                 if(![_managedObjectContext save:&error]){
@@ -385,7 +384,7 @@
             }
         }
     }
-    return newData;
+    return data;
 }
 
 - (BOOL)parseFeed:(GDataXMLElement *)rootElement entries:(NSMutableArray *)entries {
@@ -561,7 +560,7 @@
         cell.accessibilityValue = cell.textLabel.text;
         cell.textLabel.backgroundColor = [UIColor clearColor];
         if(entry.read == [NSNumber numberWithInt:0]){
-            cell.backgroundColor = [UIColor blueColor];
+            cell.backgroundColor = [UIColor grayColor];
         }
         else cell.backgroundColor = [UIColor clearColor];
         

@@ -18,9 +18,9 @@
 #import "UIImage+ImageEffects.h"
 #import "WebImageOperations.h"
 #import "Tag.h"
+#import "TwitterREST.h"
 
-
-@interface NewsViewController : UIViewController  <UIGestureRecognizerDelegate, ADBannerViewDelegate, UIGestureRecognizerDelegate, MBProgressHUDDelegate, UIScrollViewDelegate, UITextFieldDelegate, AVSpeechSynthesizerDelegate, TaggingDelegate>
+@interface NewsViewController : UIViewController  <UIGestureRecognizerDelegate, ADBannerViewDelegate, UIGestureRecognizerDelegate, MBProgressHUDDelegate, UIScrollViewDelegate, UITextFieldDelegate, AVSpeechSynthesizerDelegate, TaggingDelegate, UITextViewDelegate>
 
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;

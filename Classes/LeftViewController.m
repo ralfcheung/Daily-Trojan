@@ -328,7 +328,6 @@
         if ([controller.centerController isKindOfClass:[UINavigationController class]]) {
             if(indexPath.section == 2){
                 if(indexPath.row == 0){
-                    NSLog(@"Twitter\n");
                     if(![[UIApplication sharedApplication] openURL: [NSURL URLWithString:@"twitter://user?id=18652755"]]){
                         WebViewController *twitter = [[WebViewController alloc] init];
                         controller.centerController = [[UINavigationController alloc] initWithRootViewController:twitter];
@@ -338,13 +337,11 @@
                 
             }
             else {
-                NSLog(@"%i %i", indexPath.row, indexPath.section);
                 RootViewController *rootViewController;
                 if(!indexPath.section){
                     rootViewController = [[RootViewController alloc] initWithLink: nil name: @"Home" managedObjectContext: _managedObjectContext];
                     
                 }else{
-                NSLog(@"Section: %@", [self.sections objectAtIndex:indexPath.row]);
                     
                     rootViewController = [[RootViewController alloc] initWithLink: nil name: [self.sections objectAtIndex:indexPath.row] managedObjectContext: _managedObjectContext];
                 }

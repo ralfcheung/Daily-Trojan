@@ -101,9 +101,14 @@
     
     [fetchRequest setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:ignoreRoundUp, [NSPredicate predicateWithFormat:@"SELF.category contains %@", @"News"], nil]]];
     NSArray *array = [_managedObjectContext executeFetchRequest:fetchRequest error:nil];
-   
-    return [array objectAtIndex:0];
+    
+    NSArray *sortedArray = [array sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [((Entry *)obj2).articleDate compare:((Entry*)obj1).articleDate];
+    }];
+    
+    return [sortedArray objectAtIndex:0];
 }
+
 
 - (void)refresh {
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://dailytrojan.com/feed/rss/"]];
@@ -239,13 +244,18 @@
 //    NSLog(@"%@\n", [error description]);
 }
 
+- (void)handleNotification:(NSNotification*)note {
+    NSLog(@"Got notified: %@", note);
+}
 
 - (void)application:(UIApplication*)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
     
     
-    [rootViewController refreshWithCompletionHandler:^(BOOL didReceiveNewPosts) {
-        if (didReceiveNewPosts) {
+    [rootViewController refreshWithCompletionHandler:^(BOOL didReceiveNewPost) {
+        if (didReceiveNewPost) {
             completionHandler(UIBackgroundFetchResultNewData);
+//            [[NSNotificationCenter defaultCenter] addObserver:entry selector:@selector(handleNotification:) name:@"MyNotification" object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:entry.articleTitle object:entry];
         }else completionHandler(UIBackgroundFetchResultNoData);
     }];
 }

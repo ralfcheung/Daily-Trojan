@@ -121,7 +121,6 @@
                 name = [name stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[name substringToIndex:1] capitalizedString]];
                 [author appendFormat:@"%@ ", name];
             }
-            NSLog(@"%@", author);
             [author appendFormat:@"\n\n"];
             entry.author = [author copy];
         }else if([[element tagName] isEqualToString:@"h1"]){
@@ -137,6 +136,12 @@
             
             [resultString appendString:[self getStringForTFHppleElement:child]];
             [resultString appendFormat:@"\n\n"];
+        }else if([[element tagName] isEqualToString:@"a"]){
+
+            NSString *twitterAccount = [element objectForKey:@"href"];
+           NSLog(@"%@", [twitterAccount lastPathComponent]);
+            TwitterREST *twitter = [TwitterREST new];
+            [twitter followWriterTwitter: [twitterAccount lastPathComponent]];
         }
     }
     
@@ -159,11 +164,12 @@
         tutorialsHtmlData = [str dataUsingEncoding:NSUTF8StringEncoding];
         TFHpple *tutorialsParser = [TFHpple hppleWithHTMLData:tutorialsHtmlData];
         
-        NSString *tutorialsXpathQueryString = @"//p[@class='author']/span[@class='upper'] | //div[@class='post']/h1 | //div[@class='entry']/p";
+        NSString *tutorialsXpathQueryString = @"//p[@class='author']/span[@class='upper'] | //div[@class='post']/h1 | //div[@class='entry']/p | div[@class='entry']/a";
         NSArray *tutorialsNodes = [tutorialsParser searchWithXPathQuery:tutorialsXpathQueryString];
         content = [[NSString alloc] init];
         for (TFHppleElement *element in tutorialsNodes) {
             content = [content stringByAppendingString:[self getStringForTFHppleElement: element]];
+//            NSLog(@"asdfasd %@", [element objectForKey:@"href"]);
         }
         
         
@@ -297,6 +303,20 @@
         
         
         visible = YES;
+        
+        CGRect rect = [textView.layoutManager
+                       
+                       boundingRectForGlyphRange:NSMakeRange(0, textView.text.length)
+                       
+                       inTextContainer:textView.textContainer];
+        
+       
+        CGFloat textHeight = ceilf(rect.size.height);
+
+        CGFloat numLines = (int)ceilf(textHeight / textView.font.lineHeight);
+        
+        textHeight = ceilf(MIN(numLines, 1000) * textView.font.lineHeight);
+        NSLog(@"%f", [textView intrinsicContentSize].height);
         if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
             [self TFHppleFinishLoading];
         
@@ -398,8 +418,25 @@
     
     
     NSArray *array = [NSArray arrayWithObjects:titleText.text, nil];
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
-    activityVC.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll]; //or whichever you don't need
+    UIImage *imageToShare = backgroundImage.image;
+    NSArray *activityItems = [NSArray arrayWithObjects: titleText.text, imageToShare, nil];
+    
+    UIActivityViewController *activityVC =
+    [[UIActivityViewController alloc] initWithActivityItems:activityItems
+                                      applicationActivities:nil];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+    activityVC.excludedActivityTypes = @[UIActivityTypeAddToReadingList, UIActivityTypeAirDrop, UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePostToFacebook, UIActivityTypePostToFlickr, UIActivityTypePostToTencentWeibo, UIActivityTypePostToTwitter, UIActivityTypePostToVimeo, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll];
+    else
+        activityVC.excludedActivityTypes = [[NSArray alloc] initWithObjects:
+                                            UIActivityTypeCopyToPasteboard,
+                                            UIActivityTypePostToWeibo,
+                                            UIActivityTypePostToFacebook,
+                                            UIActivityTypeSaveToCameraRoll,
+                                            UIActivityTypeCopyToPasteboard,
+                                            UIActivityTypeMessage,
+                                            UIActivityTypeAssignToContact,
+                                            nil];
+
     [self presentViewController:activityVC animated:YES completion:nil];
     
 }
@@ -583,7 +620,7 @@
         
         [textStorage addLayoutManager:layoutManager];
         textView = [[UITextView alloc] initWithFrame:newTextViewRect textContainer:container];
-        
+
         textView.editable = NO;
         textView.scrollEnabled = YES;
 //        textView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
@@ -618,7 +655,7 @@
         textView.editable = NO;
         textView.scrollEnabled = NO;
         textView.backgroundColor = [UIColor blackColor];
-        textView.alpha = 0.8;
+        textView.alpha = 0.7;
         textView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
         textView.layer.cornerRadius = 10.0f;
         textView.textColor = [UIColor whiteColor];
@@ -642,10 +679,17 @@
         titleText.scrollsToTop = NO;
         
     }
-    
+    textView.delegate = self;
     textView.scrollsToTop = NO;
     [scrollView addSubview:textView];
     scrollView.scrollsToTop = YES;
+}
+
+
+
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange{
+    
 }
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView{
@@ -664,34 +708,6 @@
     CAKeyframeAnimation* animation = [[self class] dockBounceAnimationWithViewHeight:midHeight];
     [scrollView.layer addAnimation:animation forKey:@"bouncing"];
 }
-
-+ (CAKeyframeAnimation*)dockBounceAnimationWithViewHeight:(CGFloat)viewHeight
-{
-    NSUInteger const kNumFactors = 30;
-    CGFloat const kFactorsPerSec = 30.0f;
-    CGFloat const kFactorsMaxValue = 128.0f;
-    CGFloat factors[30] = {0, 3, 7, 9, 13, 15, 15, 13, 9, 5, 3, 0, 1.5, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 2, 1, 0};
-    
-    NSMutableArray* transforms = [NSMutableArray array];
-    
-    for(NSUInteger i = 0; i < kNumFactors; i++){
-        CGFloat positionOffset = factors[i] / kFactorsMaxValue * viewHeight;
-        CATransform3D transform = CATransform3DMakeTranslation(0.0f, -positionOffset, 0.0f);
-        
-        [transforms addObject:[NSValue valueWithCATransform3D:transform]];
-    }
-    
-    CAKeyframeAnimation* animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-    animation.repeatCount = 1;
-    animation.duration = kNumFactors * 1.0f/kFactorsPerSec;
-    animation.fillMode = kCAFillModeForwards;
-    animation.values = transforms;
-    animation.removedOnCompletion = YES; // final stage is equal to starting stage
-    animation.autoreverses = NO;
-    
-    return animation;
-}
-
 
 -(void) getRanking{
     

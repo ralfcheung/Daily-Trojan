@@ -70,6 +70,7 @@
 		BF8F5BC21757A1AD0046EA50 /* UINavigationBarTransparent.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8F5BC11757A1AD0046EA50 /* UINavigationBarTransparent.m */; };
 		BF8F5BC51758A7820046EA50 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8F5BC41758A7670046EA50 /* MBProgressHUD.m */; };
 		BF9C6D051734D28900EF66B7 /* Lifestyle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BF9C6D041734D28900EF66B7 /* Lifestyle@2x.png */; };
+		BF9C9DE317C0C652008A21E5 /* TwitterREST.m in Sources */ = {isa = PBXBuildFile; fileRef = BF9C9DE217C0C652008A21E5 /* TwitterREST.m */; };
 		BF9EE7E11774C01900F55BE3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = BF9EE7E01774BF2C00F55BE3 /* UIImage+ImageEffects.m */; };
 		BF9EE7E31774C04700F55BE3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9EE7E21774C04700F55BE3 /* Accelerate.framework */; };
 		BFA306B4174E78770055A89A /* UIBarButtonItem+withoutBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = BFA306B3174E78770055A89A /* UIBarButtonItem+withoutBorder.m */; };
@@ -215,6 +216,8 @@
 		BF8F5BC31758A7670046EA50 /* MBProgressHUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		BF8F5BC41758A7670046EA50 /* MBProgressHUD.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		BF9C6D041734D28900EF66B7 /* Lifestyle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lifestyle@2x.png"; sourceTree = "<group>"; };
+		BF9C9DE117C0C652008A21E5 /* TwitterREST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterREST.h; sourceTree = "<group>"; };
+		BF9C9DE217C0C652008A21E5 /* TwitterREST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterREST.m; sourceTree = "<group>"; };
 		BF9EE7DF1774BF2C00F55BE3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageEffects.h"; path = "../UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		BF9EE7E01774BF2C00F55BE3 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ImageEffects.m"; path = "../UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		BF9EE7E21774C04700F55BE3 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -529,6 +532,8 @@
 				BF9EE7E41774C3DF00F55BE3 /* WebImageOperations.h */,
 				BF9EE7E51774C3DF00F55BE3 /* WebImageOperations.m */,
 				BFB21AE1172374AB006EC547 /* NewsViewController.m */,
+				BF9C9DE117C0C652008A21E5 /* TwitterREST.h */,
+				BF9C9DE217C0C652008A21E5 /* TwitterREST.m */,
 				BFB21AE0172374AB006EC547 /* NewsViewController.h */,
 				BFB21AE2172374AB006EC547 /* NewsViewController.xib */,
 			);
@@ -730,6 +735,7 @@
 				35AFE2FF12EE3AFB00ECDFF2 /* GDataXMLElement-Extras.m in Sources */,
 				35AFE32912EE42F500ECDFF2 /* NSArray+Extras.m in Sources */,
 				35AFE33C12EE44FB00ECDFF2 /* WebViewController.m in Sources */,
+				BF9C9DE317C0C652008A21E5 /* TwitterREST.m in Sources */,
 				BFB21AE3172374AB006EC547 /* NewsViewController.m in Sources */,
 				BFCB065F1725CD8D002DD34A /* LeftViewController.m in Sources */,
 				BF02162B17A7F8120087F151 /* HTMLOperation.m in Sources */,
