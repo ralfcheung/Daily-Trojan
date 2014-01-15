@@ -12,6 +12,8 @@
 
 @interface TwitterREST : NSObject
 @property (nonatomic, strong) ACAccountStore *accountStore;
--(void) followWriterTwitter:(NSString *)userName;
+@property (nonatomic, strong) NSString *userName;
+
+-(void) followWriterTwitter;
 
 @end

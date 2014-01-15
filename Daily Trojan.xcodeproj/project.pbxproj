@@ -32,6 +32,8 @@
 		35AFE32912EE42F500ECDFF2 /* NSArray+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 35AFE32812EE42F500ECDFF2 /* NSArray+Extras.m */; };
 		35AFE33C12EE44FB00ECDFF2 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35AFE33A12EE44FB00ECDFF2 /* WebViewController.m */; };
 		35AFE33D12EE44FB00ECDFF2 /* WebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 35AFE33B12EE44FB00ECDFF2 /* WebViewController.xib */; };
+		BF0123D817D494AB0055B378 /* twitter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BF0123D717D494AB0055B378 /* twitter@2x.png */; };
+		BF0123DA17D4950F0055B378 /* twitterSidebar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BF0123D917D4950F0055B378 /* twitterSidebar@2x.png */; };
 		BF02162717A7DD280087F151 /* TagRankingOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = BF02162617A7DD280087F151 /* TagRankingOperation.m */; };
 		BF02162B17A7F8120087F151 /* HTMLOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = BF02162A17A7F8120087F151 /* HTMLOperation.m */; };
 		BF02163817A840060087F151 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = BF02163717A840060087F151 /* Tag.m */; };
@@ -43,6 +45,8 @@
 		BF1A5A6E1737A02B00A95288 /* Opinion@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BF1A5A6D1737A02B00A95288 /* Opinion@2x.png */; };
 		BF1A5A741737AB1500A95288 /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BF1A5A731737AB1500A95288 /* menu@2x.png */; };
 		BF1A7F071724F9D1008F7B03 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1A7F061724F9D1008F7B03 /* CoreImage.framework */; };
+		BF2FEDAD17CB1F1F00B89173 /* FlickrPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = BF2FEDAC17CB1F1F00B89173 /* FlickrPhoto.m */; };
+		BF2FEDB017CB284600B89173 /* FlickrAlbumCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF2FEDAF17CB284600B89173 /* FlickrAlbumCollectionViewCell.m */; };
 		BF35A8F2177CD03D00DD0803 /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF35A8F0177CCD8F00DD0803 /* Cell.m */; };
 		BF3D5C491722A1F5000970FC /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF3D5C481722A1F5000970FC /* MainWindow-iPad.xib */; };
 		BF3E6819175CD61100C466D6 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = BF3E6804175CD61100C466D6 /* AFHTTPClient.m */; };
@@ -80,7 +84,6 @@
 		BFA35626176490EE00BDEEB6 /* stopwords.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFA35625176490EE00BDEEB6 /* stopwords.plist */; };
 		BFA3A79A17A4528300856049 /* NewsIcon@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFA3A79917A4528300856049 /* NewsIcon@2x.jpg */; };
 		BFA3A79C17A454EA00856049 /* SportsIcon@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFA3A79B17A454EA00856049 /* SportsIcon@2x.jpg */; };
-		BFA3A7A117A45D3200856049 /* OpinionIcon@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFA3A79F17A45D3200856049 /* OpinionIcon@2x.jpg */; };
 		BFA9D9A71755A68600BFFD11 /* IMG_7248.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFA9D9A61755A68500BFFD11 /* IMG_7248.jpg */; };
 		BFB21AE3172374AB006EC547 /* NewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB21AE1172374AB006EC547 /* NewsViewController.m */; };
 		BFB21AE4172374AB006EC547 /* NewsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BFB21AE2172374AB006EC547 /* NewsViewController.xib */; };
@@ -96,6 +99,7 @@
 		BFCB06651725D451002DD34A /* IIWrapController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCB06631725D356002DD34A /* IIWrapController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		BFCE0B221749F0D50078DFF9 /* RootSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCE0B211749F0D50078DFF9 /* RootSplitViewController.m */; };
 		BFD1CB7E17228DC00083E2CA /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BFD1CB7D17228DC00083E2CA /* libz.1.2.5.dylib */; };
+		BFD2110D17C9F2620030417C /* PhotoCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFD2110C17C9F2620030417C /* PhotoCollectionViewController.m */; };
 		BFD416F017A51803000D75CD /* LifestyleIcon@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFD416EF17A51803000D75CD /* LifestyleIcon@2x.jpg */; };
 		BFD4B2C317908F41002E9D32 /* iPhone5@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFD4B2C117908F41002E9D32 /* iPhone5@2x.jpg */; };
 		BFD4B2C617908FA6002E9D32 /* iPhone4@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFD4B2C517908FA6002E9D32 /* iPhone4@2x.jpg */; };
@@ -105,6 +109,7 @@
 		BFD9E81F17253C4000D81A94 /* LifestyleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BFD9E81D17253C4000D81A94 /* LifestyleViewController.xib */; };
 		BFD9E8211725412600D81A94 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFD9E8201725412600D81A94 /* QuartzCore.framework */; };
 		BFDB8FCF17ABBF97000CF13F /* FlickrFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BFDB8FCE17ABBF97000CF13F /* FlickrFetcher.m */; };
+		BFE9216D17CB530100185057 /* RFQuiltLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE9216C17CB530100185057 /* RFQuiltLayout.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -155,6 +160,8 @@
 		35AFE33A12EE44FB00ECDFF2 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		35AFE33B12EE44FB00ECDFF2 /* WebViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebViewController.xib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Daily Trojan-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Daily Trojan-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		BF0123D717D494AB0055B378 /* twitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitter@2x.png"; sourceTree = "<group>"; };
+		BF0123D917D4950F0055B378 /* twitterSidebar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitterSidebar@2x.png"; sourceTree = "<group>"; };
 		BF02162517A7DD280087F151 /* TagRankingOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagRankingOperation.h; sourceTree = "<group>"; };
 		BF02162617A7DD280087F151 /* TagRankingOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagRankingOperation.m; sourceTree = "<group>"; };
 		BF02162917A7F8120087F151 /* HTMLOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLOperation.h; sourceTree = "<group>"; };
@@ -170,6 +177,10 @@
 		BF1A5A6D1737A02B00A95288 /* Opinion@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Opinion@2x.png"; sourceTree = "<group>"; };
 		BF1A5A731737AB1500A95288 /* menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@2x.png"; sourceTree = "<group>"; };
 		BF1A7F061724F9D1008F7B03 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		BF2FEDAB17CB1F1F00B89173 /* FlickrPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrPhoto.h; sourceTree = "<group>"; };
+		BF2FEDAC17CB1F1F00B89173 /* FlickrPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrPhoto.m; sourceTree = "<group>"; };
+		BF2FEDAE17CB284600B89173 /* FlickrAlbumCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrAlbumCollectionViewCell.h; sourceTree = "<group>"; };
+		BF2FEDAF17CB284600B89173 /* FlickrAlbumCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrAlbumCollectionViewCell.m; sourceTree = "<group>"; };
 		BF35A8EF177CCD8F00DD0803 /* Cell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Cell.h; path = ../Cell.h; sourceTree = "<group>"; };
 		BF35A8F0177CCD8F00DD0803 /* Cell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Cell.m; path = ../Cell.m; sourceTree = "<group>"; };
 		BF3D5C481722A1F5000970FC /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
@@ -234,7 +245,6 @@
 		BFA35625176490EE00BDEEB6 /* stopwords.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = stopwords.plist; sourceTree = "<group>"; };
 		BFA3A79917A4528300856049 /* NewsIcon@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "NewsIcon@2x.jpg"; sourceTree = "<group>"; };
 		BFA3A79B17A454EA00856049 /* SportsIcon@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "SportsIcon@2x.jpg"; sourceTree = "<group>"; };
-		BFA3A79F17A45D3200856049 /* OpinionIcon@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "OpinionIcon@2x.jpg"; sourceTree = "<group>"; };
 		BFA9D9A61755A68500BFFD11 /* IMG_7248.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = IMG_7248.jpg; path = ../IMG_7248.jpg; sourceTree = "<group>"; };
 		BFB1DF6E173CAA1D00F902C8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		BFB21AE0172374AB006EC547 /* NewsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsViewController.h; sourceTree = "<group>"; };
@@ -259,6 +269,8 @@
 		BFCE0B211749F0D50078DFF9 /* RootSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootSplitViewController.m; sourceTree = "<group>"; };
 		BFCFAAA5175C8538004FBC34 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		BFD1CB7D17228DC00083E2CA /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
+		BFD2110B17C9F2620030417C /* PhotoCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoCollectionViewController.h; sourceTree = "<group>"; };
+		BFD2110C17C9F2620030417C /* PhotoCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCollectionViewController.m; sourceTree = "<group>"; };
 		BFD416EF17A51803000D75CD /* LifestyleIcon@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "LifestyleIcon@2x.jpg"; sourceTree = "<group>"; };
 		BFD4B2C117908F41002E9D32 /* iPhone5@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iPhone5@2x.jpg"; sourceTree = "<group>"; };
 		BFD4B2C517908FA6002E9D32 /* iPhone4@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iPhone4@2x.jpg"; sourceTree = "<group>"; };
@@ -272,6 +284,8 @@
 		BFDB8FCC17ABBF97000CF13F /* FlickrAPIKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrAPIKey.h; sourceTree = "<group>"; };
 		BFDB8FCD17ABBF97000CF13F /* FlickrFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrFetcher.h; sourceTree = "<group>"; };
 		BFDB8FCE17ABBF97000CF13F /* FlickrFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrFetcher.m; sourceTree = "<group>"; };
+		BFE9216B17CB530100185057 /* RFQuiltLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFQuiltLayout.h; sourceTree = "<group>"; };
+		BFE9216C17CB530100185057 /* RFQuiltLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFQuiltLayout.m; sourceTree = "<group>"; };
 		BFFE03FF17786E33008E1969 /* BottomofTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BottomofTableView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -329,6 +343,14 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				BFD2110B17C9F2620030417C /* PhotoCollectionViewController.h */,
+				BFD2110C17C9F2620030417C /* PhotoCollectionViewController.m */,
+				BF2FEDAE17CB284600B89173 /* FlickrAlbumCollectionViewCell.h */,
+				BF2FEDAF17CB284600B89173 /* FlickrAlbumCollectionViewCell.m */,
+				BF2FEDAB17CB1F1F00B89173 /* FlickrPhoto.h */,
+				BF2FEDAC17CB1F1F00B89173 /* FlickrPhoto.m */,
+				BFE9216B17CB530100185057 /* RFQuiltLayout.h */,
+				BFE9216C17CB530100185057 /* RFQuiltLayout.m */,
 				BF44AEF017AAE03500DE5C22 /* IMG_0096.JPG */,
 				BF02162517A7DD280087F151 /* TagRankingOperation.h */,
 				BF02162617A7DD280087F151 /* TagRankingOperation.m */,
@@ -532,10 +554,10 @@
 				BF9EE7E41774C3DF00F55BE3 /* WebImageOperations.h */,
 				BF9EE7E51774C3DF00F55BE3 /* WebImageOperations.m */,
 				BFB21AE1172374AB006EC547 /* NewsViewController.m */,
-				BF9C9DE117C0C652008A21E5 /* TwitterREST.h */,
-				BF9C9DE217C0C652008A21E5 /* TwitterREST.m */,
 				BFB21AE0172374AB006EC547 /* NewsViewController.h */,
 				BFB21AE2172374AB006EC547 /* NewsViewController.xib */,
+				BF9C9DE117C0C652008A21E5 /* TwitterREST.h */,
+				BF9C9DE217C0C652008A21E5 /* TwitterREST.m */,
 			);
 			name = "iPhone View Controllers";
 			path = Classes;
@@ -569,8 +591,9 @@
 		BFD87E7817336FEB0022B889 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				BF0123D717D494AB0055B378 /* twitter@2x.png */,
+				BF0123D917D4950F0055B378 /* twitterSidebar@2x.png */,
 				BFD416EF17A51803000D75CD /* LifestyleIcon@2x.jpg */,
-				BFA3A79F17A45D3200856049 /* OpinionIcon@2x.jpg */,
 				BFA3A79B17A454EA00856049 /* SportsIcon@2x.jpg */,
 				BFA3A79917A4528300856049 /* NewsIcon@2x.jpg */,
 				BF0D3E4A175E38D1007A5731 /* Default@2x.png */,
@@ -666,6 +689,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */,
+				BF0123DA17D4950F0055B378 /* twitterSidebar@2x.png in Resources */,
 				28F335F11007B36200424DE2 /* RootViewController.xib in Resources */,
 				35AFE33D12EE44FB00ECDFF2 /* WebViewController.xib in Resources */,
 				BFD4B2C317908F41002E9D32 /* iPhone5@2x.jpg in Resources */,
@@ -693,8 +717,8 @@
 				BF3E6824175CD61100C466D6 /* README.md in Resources */,
 				BFA3A79A17A4528300856049 /* NewsIcon@2x.jpg in Resources */,
 				BF0D3E49175E38B0007A5731 /* Default-568h@2x.png in Resources */,
-				BFA3A7A117A45D3200856049 /* OpinionIcon@2x.jpg in Resources */,
 				BF0D3E4B175E38D1007A5731 /* Default@2x.png in Resources */,
+				BF0123D817D494AB0055B378 /* twitter@2x.png in Resources */,
 				BFA35626176490EE00BDEEB6 /* stopwords.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -714,12 +738,15 @@
 				BF8F5BC51758A7820046EA50 /* MBProgressHUD.m in Sources */,
 				BFA306BE174EE04B0055A89A /* NSDate+InternetDateTime.m in Sources */,
 				BFCB06651725D451002DD34A /* IIWrapController.m in Sources */,
+				BFD2110D17C9F2620030417C /* PhotoCollectionViewController.m in Sources */,
 				BFCB06611725D30B002DD34A /* IIViewDeckController.m in Sources */,
 				BFB21AF81723C3F2006EC547 /* TFHpple.m in Sources */,
 				BFB21AF91723C3F2006EC547 /* TFHppleElement.m in Sources */,
 				BFB21AFA1723C3F2006EC547 /* XPathQuery.m in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* RSSFunAppDelegate.m in Sources */,
+				BFE9216D17CB530100185057 /* RFQuiltLayout.m in Sources */,
+				BF2FEDAD17CB1F1F00B89173 /* FlickrPhoto.m in Sources */,
 				28C286E10D94DF7D0034E888 /* RootViewController.m in Sources */,
 				BF02163817A840060087F151 /* Tag.m in Sources */,
 				35AFE2BF12EE2FA100ECDFF2 /* ASIAuthenticationDialog.m in Sources */,
@@ -729,6 +756,7 @@
 				35AFE2C112EE2FA100ECDFF2 /* ASIDataDecompressor.m in Sources */,
 				35AFE2C412EE2FA100ECDFF2 /* ASIHTTPRequest.m in Sources */,
 				35AFE2C512EE2FA100ECDFF2 /* ASIInputStream.m in Sources */,
+				BF2FEDB017CB284600B89173 /* FlickrAlbumCollectionViewCell.m in Sources */,
 				35AFE2C612EE2FA100ECDFF2 /* ASINetworkQueue.m in Sources */,
 				35AFE2C712EE2FA100ECDFF2 /* Reachability.m in Sources */,
 				35AFE2F112EE399E00ECDFF2 /* GDataXMLNode.m in Sources */,
@@ -778,7 +806,7 @@
 				GCC_PREFIX_HEADER = "Daily Trojan_Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				INFOPLIST_FILE = "Daily Trojan-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "Daily Trojan";
 				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -797,7 +825,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Daily Trojan_Prefix.pch";
 				INFOPLIST_FILE = "Daily Trojan-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "Daily Trojan";
 				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;

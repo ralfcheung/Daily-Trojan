@@ -10,6 +10,8 @@
 
 @implementation TwitterREST
 @synthesize accountStore;
+@synthesize userName;
+
 
 - (BOOL)userHasAccessToTwitter
 {
@@ -18,9 +20,10 @@
     return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
 }
 
--(void) followWriterTwitter:(NSString *)userName{
+-(void) followWriterTwitter{
+
     if ([self userHasAccessToTwitter]) {
-    
+
         ACAccountType *twitterAccountType = [self.accountStore
                                              accountTypeWithAccountTypeIdentifier:
                                              ACAccountTypeIdentifierTwitter];
@@ -29,7 +32,7 @@
                 NSArray *twitterAccounts =
                 [self.accountStore accountsWithAccountType:twitterAccountType];
                 NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/friendships/create.json"];
-                NSDictionary *params = @{@"screen_name" : userName,
+                NSDictionary *params = @{@"screen_name" : self.userName,
                                          @"follow" : @"true"};
                 SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter
                                                         requestMethod:SLRequestMethodPOST
@@ -39,9 +42,9 @@
                 [request performRequestWithHandler:^(NSData *responseData,
                                                     NSHTTPURLResponse *urlResponse,
                                                     NSError *error) {
-                    NSLog(@"URL Response Data: %i", [urlResponse statusCode]);
                     if ([urlResponse statusCode] != 200) {
                         NSLog(@"Twitter warning");
+                        NSLog(@"URL Response Data: %@", [NSHTTPURLResponse localizedStringForStatusCode: [urlResponse statusCode]]);
                     }
                 }];
             }

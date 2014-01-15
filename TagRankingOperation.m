@@ -24,7 +24,7 @@
     if ([self isCancelled]) {
         NSLog(@"** operation cancelled **");
     }
-    _tags = [self getRanking];
+//    _tags = [self getRanking];
     
     [(NSObject *)self.delegate performSelectorOnMainThread:@selector(finishedTagging:) withObject:self waitUntilDone:NO];
 

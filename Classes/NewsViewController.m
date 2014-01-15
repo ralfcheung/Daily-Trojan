@@ -16,6 +16,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UIImage+Resize.h"
 #import "Reachability.h"
+#import "UIBarButtonItem+withoutBorder.h"
+
 
 #define EMPTYVIEW 300
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
@@ -34,7 +36,7 @@
 @property (nonatomic, retain) IBOutlet UITextView *titleText;
 @property (nonatomic, retain) IBOutlet UIImageView* backgroundImage;
 @property (nonatomic, retain) NSString *title;
-@property (nonatomic, retain) NSMutableString *author;
+@property (nonatomic, strong) NSMutableString *author;
 @property (readwrite) BOOL visible;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, retain) MBProgressHUD *HUD;
@@ -42,6 +44,9 @@
 @property (nonatomic, retain) AVSpeechSynthesizer *av;
 @property (nonatomic, retain) NSOperationQueue *operationQueue;
 @property (nonatomic, retain) NSLayoutManager *layoutManager;
+@property (nonatomic, retain) TwitterREST *twitter;
+
+
 @end
 
 @implementation NewsViewController
@@ -62,7 +67,7 @@
 @synthesize av;
 @synthesize operationQueue;
 @synthesize layoutManager;
-
+@synthesize twitter;
 
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner
@@ -110,7 +115,7 @@
     NSMutableString *resultString = [NSMutableString new];
     
     // Iterate recursively through all children
-    author = [NSMutableString new];
+    author = [[NSMutableString alloc] initWithString:@""];
     
     for (TFHppleElement *child in [element children]){
         if([[element tagName] isEqualToString:@"span"]){
@@ -122,7 +127,10 @@
                 [author appendFormat:@"%@ ", name];
             }
             [author appendFormat:@"\n\n"];
-            entry.author = [author copy];
+            if ([author isEqualToString:@""]) {
+                entry.author = [NSString stringWithFormat: @""];
+            }else
+                entry.author = [author copy];
         }else if([[element tagName] isEqualToString:@"h1"]){
             title = [self getStringForTFHppleElement: child];
             if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
@@ -137,11 +145,14 @@
             [resultString appendString:[self getStringForTFHppleElement:child]];
             [resultString appendFormat:@"\n\n"];
         }else if([[element tagName] isEqualToString:@"a"]){
-
+            
+            
             NSString *twitterAccount = [element objectForKey:@"href"];
-           NSLog(@"%@", [twitterAccount lastPathComponent]);
-            TwitterREST *twitter = [TwitterREST new];
-            [twitter followWriterTwitter: [twitterAccount lastPathComponent]];
+            twitter = [TwitterREST new];
+            twitter.userName = [twitterAccount lastPathComponent];
+        }else if ([[element tagName] isEqualToString:@"div"]){
+            
+            [self getStringForTFHppleElement:child];
         }
     }
     
@@ -164,12 +175,12 @@
         tutorialsHtmlData = [str dataUsingEncoding:NSUTF8StringEncoding];
         TFHpple *tutorialsParser = [TFHpple hppleWithHTMLData:tutorialsHtmlData];
         
-        NSString *tutorialsXpathQueryString = @"//p[@class='author']/span[@class='upper'] | //div[@class='post']/h1 | //div[@class='entry']/p | div[@class='entry']/a";
+        NSString *tutorialsXpathQueryString = @"//p[@class='author']/span[@class='upper'] | //div[@class='post']/h1 | //div[@class='entry']/p | //div[@class='entry'] | //div[@class='']";
         NSArray *tutorialsNodes = [tutorialsParser searchWithXPathQuery:tutorialsXpathQueryString];
         content = [[NSString alloc] init];
         for (TFHppleElement *element in tutorialsNodes) {
             content = [content stringByAppendingString:[self getStringForTFHppleElement: element]];
-//            NSLog(@"asdfasd %@", [element objectForKey:@"href"]);
+//            NSLog(@"%@", content);
         }
         
         
@@ -177,8 +188,16 @@
         
         tutorialsXpathQueryString = @"//p[@class='wp-caption-text']";
         tutorialsNodes = [tutorialsParser searchWithXPathQuery:tutorialsXpathQueryString];
-        if(tutorialsNodes)
-            captionString = [self getStringForTFHppleElement:[tutorialsNodes lastObject]];
+        
+        if(tutorialsNodes){
+            if ([self getStringForTFHppleElement:[tutorialsNodes lastObject]]) {
+//                NSLog(@"%@", [self getStringForTFHppleElement:[tutorialsNodes lastObject]]);
+                captionString = [self getStringForTFHppleElement:[tutorialsNodes lastObject]];
+            }
+            else{
+                NSLog(@"can't find");
+            }
+        }
         if (_managedObjectContext) {
             entry.story = [Story storyinManagedObjectContext:_managedObjectContext storyContent:content picture:nil caption:captionString];
         }
@@ -254,7 +273,8 @@
             [textStorage setAttributedString:[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", entry.articleTitle] attributes:titleDic]];
             
             if(!_managedObjectContext){
-                [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:author attributes:nameDic]];
+                NSLog(@"%@", [author copy]);
+                [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:[author copy] attributes:nameDic]];
 
                 [textStorage appendAttributedString:[[NSMutableAttributedString alloc] initWithString:content attributes:dict]];
             }
@@ -268,8 +288,11 @@
 //            [textView sizeToFit];
 //            [scrollView sizeToFit];
         }else{
-            if(_managedObjectContext)
+            if(_managedObjectContext){
+//                NSLog(@"%@", entry.author);
                 textView.text = [NSString stringWithFormat:@"%@%@",entry.author, entry.story.content];
+                
+            }
             else
                 textView.text = [NSString stringWithFormat:@"%@%@", author, content];
             
@@ -304,19 +327,7 @@
         
         visible = YES;
         
-        CGRect rect = [textView.layoutManager
-                       
-                       boundingRectForGlyphRange:NSMakeRange(0, textView.text.length)
-                       
-                       inTextContainer:textView.textContainer];
-        
-       
-        CGFloat textHeight = ceilf(rect.size.height);
-
-        CGFloat numLines = (int)ceilf(textHeight / textView.font.lineHeight);
-        
-        textHeight = ceilf(MIN(numLines, 1000) * textView.font.lineHeight);
-        NSLog(@"%f", [textView intrinsicContentSize].height);
+        NSLog(@"%f", textView.contentSize.height);
         if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
             [self TFHppleFinishLoading];
         
@@ -414,35 +425,22 @@
 }
 
 
--(void) shareButton:(id)sender{
+-(void) shareButton: (id) sender{
     
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Twitter" message:[NSString stringWithFormat:@"Follow @%@ on Twitter?", twitter.userName] delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
     
-    NSArray *array = [NSArray arrayWithObjects:titleText.text, nil];
-    UIImage *imageToShare = backgroundImage.image;
-    NSArray *activityItems = [NSArray arrayWithObjects: titleText.text, imageToShare, nil];
+    [alert show];
     
-    UIActivityViewController *activityVC =
-    [[UIActivityViewController alloc] initWithActivityItems:activityItems
-                                      applicationActivities:nil];
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
-    activityVC.excludedActivityTypes = @[UIActivityTypeAddToReadingList, UIActivityTypeAirDrop, UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePostToFacebook, UIActivityTypePostToFlickr, UIActivityTypePostToTencentWeibo, UIActivityTypePostToTwitter, UIActivityTypePostToVimeo, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll];
-    else
-        activityVC.excludedActivityTypes = [[NSArray alloc] initWithObjects:
-                                            UIActivityTypeCopyToPasteboard,
-                                            UIActivityTypePostToWeibo,
-                                            UIActivityTypePostToFacebook,
-                                            UIActivityTypeSaveToCameraRoll,
-                                            UIActivityTypeCopyToPasteboard,
-                                            UIActivityTypeMessage,
-                                            UIActivityTypeAssignToContact,
-                                            nil];
+}
 
-    [self presentViewController:activityVC animated:YES completion:nil];
+-(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex) [twitter followWriterTwitter];
     
 }
 
 - (void) generateImage{
-    NSURL *link = [NSURL URLWithString:imageUrl];
+//    NSLog(@"%@", imageUrl);
+//    NSURL *link = [NSURL URLWithString:imageUrl];
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("image downloader", NULL);
     dispatch_async(downloadQueue, ^{
@@ -450,7 +448,17 @@
         if(!imageUrl){
             _image = [UIImage imageNamed:@"iPhone5.jpg"];
         }else{
-            NSData *data = [NSData dataWithContentsOfURL:link];
+            NSURL *link = [NSURL URLWithString:imageUrl];
+            NSLog(@"%@", link);
+            NSData* data;
+            NSError *error = nil;
+            
+            data = [NSData dataWithContentsOfURL:link options:NSDataReadingUncached error:&error];
+            if (error) {
+                NSLog(@"%@", [error localizedDescription]);
+
+            }
+            
             _image = [[UIImage alloc] initWithData:data];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -534,9 +542,10 @@
         
         [self initializeViews];
         
-        UIBarButtonItem *loadingView = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareButton:)];
-        UIBarButtonItem *speech = [[UIBarButtonItem alloc] initWithTitle:@"Speech" style:UIBarButtonItemStylePlain target:self action:@selector(speak:)];
-        
+//        UIBarButtonItem *loadingView = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareButton:)];
+        UIBarButtonItem *loadingView = [UIBarButtonItem barItemWithImage:[UIImage imageNamed:@"twitter.png"] target: self action:@selector(shareButton:)];
+//        UIBarButtonItem *speech = [[UIBarButtonItem alloc] initWithTitle:@"Speech" style:UIBarButtonItemStylePlain target:self action:@selector(speak:)];
+    
         [self.navigationItem setRightBarButtonItem:loadingView];
         
         
@@ -687,10 +696,6 @@
 
 
 
-
-- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange{
-    
-}
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView{
     

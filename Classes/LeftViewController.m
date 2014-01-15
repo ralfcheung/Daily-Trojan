@@ -180,7 +180,10 @@
             }
             break;
         case 2:
-            if(indexPath.row == 0) cell.textLabel.text = @"Twitter";
+            if(indexPath.row == 0){
+                cell.textLabel.text = @"Twitter";
+                cell.imageView.image = [UIImage imageNamed:@"twitterSideBar.png"];
+            }
             else cell.textLabel.text = @"Facebook";
             cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:18];
             break;

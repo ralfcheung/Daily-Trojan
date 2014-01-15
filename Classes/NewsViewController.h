@@ -20,7 +20,7 @@
 #import "Tag.h"
 #import "TwitterREST.h"
 
-@interface NewsViewController : UIViewController  <UIGestureRecognizerDelegate, ADBannerViewDelegate, UIGestureRecognizerDelegate, MBProgressHUDDelegate, UIScrollViewDelegate, UITextFieldDelegate, AVSpeechSynthesizerDelegate, TaggingDelegate, UITextViewDelegate>
+@interface NewsViewController : UIViewController  <UIGestureRecognizerDelegate, ADBannerViewDelegate, UIGestureRecognizerDelegate, MBProgressHUDDelegate, UIScrollViewDelegate, AVSpeechSynthesizerDelegate, TaggingDelegate, UITextViewDelegate, UIAlertViewDelegate>
 
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;

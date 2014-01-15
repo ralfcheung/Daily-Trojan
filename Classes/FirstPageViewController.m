@@ -14,6 +14,8 @@
 
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define FIRST_NO_PHOTOS 30
+
 
 @interface FirstPageViewController ()
 
@@ -116,6 +118,8 @@
     NSString *stringPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
     NSArray *filePathsArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:stringPath  error:&error];
     UIImage *ia;
+    
+    
     for(int i = 0; i < [filePathsArray count]; i++){
        
         NSString *strFilePath = [filePathsArray objectAtIndex:i];
@@ -155,8 +159,8 @@
                 imageView.image = image;
 //            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 //                imageView.image = [imageView.image resizedImageByMagick:@""]
-
-            imageView.image = [imageView.image resizedImageByMagick:@"640x1136#"];
+            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+                imageView.image = [imageView.image resizedImageByMagick:@"640x1136#"];
             [imageView.superview sendSubviewToBack:imageView];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
         });
@@ -214,12 +218,14 @@
 
 -(UIImage *) loadFromFlickr{
     NSArray *photoArray = [FlickrFetcher uscPhotos];
+    NSUInteger count = [photoArray count] > FIRST_NO_PHOTOS ? [photoArray count] : FIRST_NO_PHOTOS;
+    
     
     NSURL *url;
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        url =[FlickrFetcher urlForPhoto:photoArray[arc4random() % 12] format:FlickrPhotoFormatOriginal];
+        url =[FlickrFetcher urlForPhoto:photoArray[arc4random() % count] format:FlickrPhotoFormatOriginal];
     else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        url = [FlickrFetcher urlForPhoto:photoArray[arc4random() % 12] format:FlickrPhotoFormatLarge];
+        url = [FlickrFetcher urlForPhoto:photoArray[arc4random() % count] format:FlickrPhotoFormatLarge];
 
     NSData *data = [NSData dataWithContentsOfURL:url];
     return [UIImage imageWithData:data];

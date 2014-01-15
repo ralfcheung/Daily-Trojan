@@ -1,5 +1,5 @@
 //  main.m
-//  RSSFun
+//  Daily Trojan
 //
 //  Created by Ralf Cheung on 5/1/13.
 //  Copyright 2013 Ralf Cheung. All rights reserved.

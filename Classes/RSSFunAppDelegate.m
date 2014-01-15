@@ -18,6 +18,9 @@
 #import "NSDate+InternetDateTime.h"
 #import "FirstPageViewController.h"
 #import "UINavigationBarWithoutGradient.h"
+#import "PhotoCollectionViewController.h"
+
+
 
 @implementation RSSFunAppDelegate
 
@@ -58,16 +61,17 @@
     
     self.firstPageController = [[FirstPageViewController alloc] initWithTitles];
 
+//    PhotoCollectionViewController *photo = [[PhotoCollectionViewController alloc] init];
     leftVC = [[LeftViewController alloc] init];
     leftVC.managedObjectContext = [self managedObjectContext];
     
-//    self.centerController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
     self.centerController = [[UINavigationController alloc] initWithRootViewController:self.firstPageController];
+//    self.centerController = [[UINavigationController alloc] initWithRootViewController:photo];
+
     if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
 //        self.centerController = [[UINavigationBarWithoutGradient alloc] init];
-    
+        
     }
-//    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
     
     IIViewDeckController *deckController = [[IIViewDeckController alloc] initWithCenterViewController:self.centerController leftViewController:leftVC];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
@@ -114,6 +118,9 @@
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://dailytrojan.com/feed/rss/"]];
     NSError *error;
     NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+    if (error) {
+        NSLog(@"%@", [error localizedDescription]);
+    }
     GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithData:returnData
                                                            options:0 error:&error];
     if (doc == nil) {
