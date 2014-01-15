@@ -149,7 +149,11 @@
             
             NSString *twitterAccount = [element objectForKey:@"href"];
             twitter = [TwitterREST new];
-            twitter.userName = [twitterAccount lastPathComponent];
+            
+            if ([twitterAccount rangeOfString:@"twitter.com"].location != NSNotFound) {
+                twitter.userName = [twitterAccount lastPathComponent];
+            }
+            else twitter.userName = @"dailytrojan";
         }else if ([[element tagName] isEqualToString:@"div"]){
             
             [self getStringForTFHppleElement:child];
