@@ -18,7 +18,6 @@
 #import "Reachability.h"
 #import "UIBarButtonItem+withoutBorder.h"
 
-
 #define EMPTYVIEW 300
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
@@ -122,10 +121,12 @@
             NSString *authorSt = [self getStringForTFHppleElement:child];
             NSArray *names = [authorSt componentsSeparatedByString: @" "];
             [author appendString:@"By: "];
-            for (__strong NSString *name in names){
-                name = [name stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[name substringToIndex:1] capitalizedString]];
-                [author appendFormat:@"%@ ", name];
-            }
+            NSLog(@"%@", element.content);
+            if([names count] > 1)
+                for (__strong NSString *name in names){
+                    name = [name stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[name substringToIndex:1] capitalizedString]];
+                    [author appendFormat:@"%@ ", name];
+                }
             [author appendFormat:@"\n\n"];
             if ([author isEqualToString:@""]) {
                 entry.author = [NSString stringWithFormat: @""];
@@ -179,7 +180,7 @@
         tutorialsHtmlData = [str dataUsingEncoding:NSUTF8StringEncoding];
         TFHpple *tutorialsParser = [TFHpple hppleWithHTMLData:tutorialsHtmlData];
         
-        NSString *tutorialsXpathQueryString = @"//p[@class='author']/span[@class='upper'] | //div[@class='post']/h1 | //div[@class='entry']/p | //div[@class='entry'] | //div[@class='']";
+        NSString *tutorialsXpathQueryString = @"//p[@class='author']/span//a | //div[@class='post']/h1 | //div[@class='entry']/p | //div[@class='entry'] | //div[@class='']";
         NSArray *tutorialsNodes = [tutorialsParser searchWithXPathQuery:tutorialsXpathQueryString];
         content = [[NSString alloc] init];
         for (TFHppleElement *element in tutorialsNodes) {
@@ -431,8 +432,8 @@
 
 -(void) shareButton: (id) sender{
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Twitter" message:[NSString stringWithFormat:@"Follow @%@ on Twitter?", twitter.userName] delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
     
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Twitter" message:[NSString stringWithFormat:@"Follow @%@ on Twitter?", twitter.userName] delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
     [alert show];
     
 }
@@ -453,14 +454,12 @@
             _image = [UIImage imageNamed:@"iPhone5.jpg"];
         }else{
             NSURL *link = [NSURL URLWithString:imageUrl];
-            NSLog(@"%@", link);
             NSData* data;
             NSError *error = nil;
             
-            data = [NSData dataWithContentsOfURL:link options:NSDataReadingUncached error:&error];
+            data = [NSData dataWithContentsOfURL:link options:NSDataReadingMappedAlways error:&error];
             if (error) {
                 NSLog(@"%@", [error localizedDescription]);
-
             }
             
             _image = [[UIImage alloc] initWithData:data];
@@ -470,8 +469,21 @@
             backgroundImage.image = [backgroundImage.image resizedImageByMagick:@"640x1136#"];
             
             [backgroundImage setClipsToBounds:YES];
-            [backgroundImage.superview sendSubviewToBack:backgroundImage];
-            
+//            [backgroundImage.superview sendSubviewToBack:backgroundImage];
+//            if(_image.size.height / _image.size.width > 1.1){
+//                [self imageViewAnimation:0 frame:backgroundImage.frame];
+//                
+//                NSLog(@"Vertical\n");
+//            }
+//            else{
+//                
+//                [self imageViewAnimation:190 frame:backgroundImage.frame];
+//                backgroundImage.frame.origin.x = -200;
+//                NSLog(@"Horizontal %f\n", _image.size.height / _image.size.width);
+//            }
+//            backgroundImage.frame = frame;
+//            [UIView commitAnimations];
+
         });
         
     });
@@ -481,20 +493,6 @@
     
     //    CGRect frame = backgroundImage.frame;
     
-    /*
-     if(_image.size.height / _image.size.width > 1.1){
-     [self imageViewAnimation:0 frame:frame];
-     
-     NSLog(@"Vertical\n");
-     }
-     else{
-     
-     [self imageViewAnimation:190 frame:_frame];
-     frame.origin.x = -200;
-     NSLog(@"Horizontal %f\n", _image.size.height / _image.size.width);
-     }
-     backgroundImage.frame = frame;
-     [UIView commitAnimations];*/
     
     //    [UIView animateWithDuration:20
     //                          delay:0

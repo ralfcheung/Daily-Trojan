@@ -110,6 +110,7 @@
 		BFD9E8211725412600D81A94 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFD9E8201725412600D81A94 /* QuartzCore.framework */; };
 		BFDB8FCF17ABBF97000CF13F /* FlickrFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BFDB8FCE17ABBF97000CF13F /* FlickrFetcher.m */; };
 		BFE9216D17CB530100185057 /* RFQuiltLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE9216C17CB530100185057 /* RFQuiltLayout.m */; };
+		FDCBC33518F72B5400EF8030 /* Chinese.strings in Resources */ = {isa = PBXBuildFile; fileRef = FDCBC33418F72B5400EF8030 /* Chinese.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -287,6 +288,7 @@
 		BFE9216B17CB530100185057 /* RFQuiltLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFQuiltLayout.h; sourceTree = "<group>"; };
 		BFE9216C17CB530100185057 /* RFQuiltLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFQuiltLayout.m; sourceTree = "<group>"; };
 		BFFE03FF17786E33008E1969 /* BottomofTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BottomofTableView.h; sourceTree = "<group>"; };
+		FDCBC33418F72B5400EF8030 /* Chinese.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Chinese.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -543,6 +545,7 @@
 				BFCB065E1725CD8D002DD34A /* LeftViewController.xib */,
 				BF35A8EF177CCD8F00DD0803 /* Cell.h */,
 				BF35A8F0177CCD8F00DD0803 /* Cell.m */,
+				FDCBC33418F72B5400EF8030 /* Chinese.strings */,
 				28C286DF0D94DF7D0034E888 /* RootViewController.h */,
 				28C286E00D94DF7D0034E888 /* RootViewController.m */,
 				BFC0DA6A1799485F00A0FD14 /* FirstPageViewController.h */,
@@ -715,6 +718,7 @@
 				BF3E6822175CD61100C466D6 /* AFNetworking.podspec in Resources */,
 				BF3E6823175CD61100C466D6 /* LICENSE in Resources */,
 				BF3E6824175CD61100C466D6 /* README.md in Resources */,
+				FDCBC33518F72B5400EF8030 /* Chinese.strings in Resources */,
 				BFA3A79A17A4528300856049 /* NewsIcon@2x.jpg in Resources */,
 				BF0D3E49175E38B0007A5731 /* Default-568h@2x.png in Resources */,
 				BF0D3E4B175E38D1007A5731 /* Default@2x.png in Resources */,
